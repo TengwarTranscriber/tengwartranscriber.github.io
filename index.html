@@ -7,21 +7,66 @@
     <meta name="theme-color" content="#157878">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/css/cayman.css">
+    <style type="text/css">
+		  body {
+			text-rendering: optimizeLegibility;
+			font-feature-settings: "kern";
+			-moz-font-feature-settings: "kern=1";
+			-ms-font-feature-settings: "kern";
+			-webkit-font-feature-settings: "kern";
+			-o-font-feature-settings: "kern";
+		  }
+		  @font-face {
+			  font-family: 'Tengwar Feanor RegularSVG';
+			  src: url('tengwarfeanorregular.svg#Tengwar Feanor Regular') format('svg');
+		  }
+	
+		  @font-face {
+			  font-family: 'Tengwar Feanor RegularTTF';
+			  src: url('tengwarfeanorregular.ttf') format('truetype');
+		  } 
+		
+		  @font-face {
+			  font-family: 'Tengwar Feanor RegularEOT';
+			  src: url('Tengwar Feanor Regular.eot');
+		  }
+		  textarea#output {
+			  font-family: 'Tengwar Feanor RegularEOT', 'Tengwar Feanor RegularTTF', 'Tengwar Feanor RegularSVG';
+  			font-size: 20pt;
+		  } 
+	</style>
+  <script language="JavaScript">
+    <!-- Begin
+    var Input = document.getElementById('Input');
+    var Output = document.getElementById('Output');
+    
+    Input.addEventListener('input', function() {
+      Output.value = " " + Input.value
+      Output.value = Output.value.replace(/\n/g, '\n ').replace(/ a/g, " A").replace(/ e/g, " E").replace(/ i/g, " I").replace(/ o/g, " O").replace(/ u/g, " U").replace(/aa/g, "aA").replace(/ae/g, "aE").replace(/ai/g, "aI").replace(/ao/g, "aO").replace(/au/g, "aU").replace(/ea/g, "eA").replace(/ee/g, "eE").replace(/ei/g, "eI").replace(/eo/g, "eO").replace(/eu/g, "eU").replace(/ia/g, "iA").replace(/ie/g, "iE").replace(/ii/g, "iI").replace(/io/g, "iO").replace(/iu/g, "iU").replace(/oa/g, "oA").replace(/oe/g, "oE").replace(/oi/g, "oI").replace(/oo/g, "eO").replace(/ou/g, "oU").replace(/ua/g, "uA").replace(/ue/g, "uE").replace(/ui/g, "uI").replace(/uo/g, "uO").replace(/uu/g, "uU").replace(/ck/g, "c").replace(/Aa/g, "AA").replace(/Ae/g, "AE").replace(/Ai/g, "AI").replace(/Ao/g, "AO").replace(/Au/g, "AU").replace(/Ea/g, "EA").replace(/Ee/g, "EE").replace(/Ei/g, "EI").replace(/Eo/g, "EO").replace(/Eu/g, "EU").replace(/Ia/g, "IA").replace(/Ie/g, "IE").replace(/Ii/g, "II").replace(/Io/g, "IO").replace(/Iu/g, "IU").replace(/Oa/g, "OA").replace(/Oe/g, "OE").replace(/Oi/g, "OI").replace(/Oo/g, "OO").replace(/Ou/g, "OU").replace(/Ua/g, "UA").replace(/Ue/g, "UE").replace(/Ui/g, "UI").replace(/Uo/g, "UO").replace(/Uu/g, "UU");
+    }, false);
+    //  End -->
+  </script>
   </head>
   <body>
     <section class="page-header">
       <h1 class="project-name">Tengwar Feanor Elvish Transcriber</h1>
       <a href="/Dwarvish.html" class="btn">Dwarvish Transcriber</a>
-      <a href="/AboutElvish.html" class="btn">AboutElvish</a>
+      <a href="/AboutElvish.html" class="btn">About Elvish</a>
       <a href="/AboutDwarvish.html" class="btn">About Dwarvish</a>
       <a href="/Maps.html" class="btn">Maps</a>
       <a href="/Songs.html" class="btn">Songs</a>
       <a href="/Apps.html" class="btn">Apps</a>
       <a href="/Fonts.html" class="btn">Fonts</a>
+      <a href="/Feedback.html" class="btn">Fonts</a>
       <a href="https://github.com/tengwartranscriber/tengwartranscriber.github.io" class="btn">View on GitHub</a>
     </section>
 
     <section class="main-content">
+      <p>Type in the text field below to transcribe</p>
+      <textarea id="Input">Text entered here will be tranScribed</textarea>
+      <p>Transcribed text will appear here</p>
+      <textarea class="jsrequired" style="font-family:Tengwar Feanor RegularTTF;" id="Output" readonly>Text Entered here will be tranScribed</textarea>
+      
       <h1>This is just a demo so far...</h1>
       <p>Text can be <strong>bold</strong>, <em>italic</em>, or <del>strikethrough</del>. <a href="https://github.com">Links</a> should be blue with no underlines (unless hovered over).</p>
 
