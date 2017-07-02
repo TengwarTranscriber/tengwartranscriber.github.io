@@ -52,17 +52,17 @@ a {
 .page-header {
   color: #fff;
   text-align: center;
-  background-color: #159957;
-  background-image: linear-gradient(120deg, #155799, #159957); }
+  background-color: #515151;
+  }
   @media screen and (min-width: 64em) {
     .page-header {
-      padding: 5rem 6rem; } }
+      padding: 1rem 6rem; } }
   @media screen and (min-width: 42em) and (max-width: 64em) {
     .page-header {
-      padding: 3rem 4rem; } }
+      padding: 1rem 4rem; } }
   @media screen and (max-width: 42em) {
     .page-header {
-      padding: 2rem 1rem; } }
+      padding: 1rem 1rem; } }
 
 .project-name {
   margin-top: 0;
@@ -220,9 +220,12 @@ a {
     border: 0; }
 
 .site-footer {
-  padding-top: 2rem;
+  background-color:#515151;
+  padding: 1rem;
   margin-top: 2rem;
-  border-top: solid 1px #eff0f1; }
+  border-width: 0px;
+  border-radius: 5px;
+  }
   @media screen and (min-width: 64em) {
     .site-footer {
       font-size: 1rem; } }
@@ -235,10 +238,13 @@ a {
 
 .site-footer-owner {
   display: block;
-  font-weight: bold; }
+  font-weight: bold; 
+  color:#CCCCCC;
+  }
 
 .site-footer-credits {
-  color: #819198; }
+  color: #999999; 
+  }
 
 
 
