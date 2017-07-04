@@ -70,6 +70,10 @@
 				margin: 2rem;
 				display: inline-block;
 			}
+			
+			.inline {
+				display: inline-block;
+			}
 		</style>
 		<script language="JavaScript">
 			function onLoad(){
@@ -94,11 +98,16 @@
 				} else {
 					browserWarning.style.display = 'block';
 				}
+				if (getURLParameter('alert') == 1){
+				document.getElementById('thankyou').style.display = "block";
+				}
 				getHash();
 			}
 			
 			function saveElvishImage() {
 				document.getElementById('elvishSpinner').style.display = "block";
+				document.getElementById('saveElvish').innerHTML = "Saving...";
+				document.getElementById('saveElvish').disabled = "true";
 				html2canvas(ElvishOutput, {
 					onrendered: function(canvas) {
 						// canvas is the final rendered <canvas> element
@@ -119,12 +128,16 @@
 						document.body.appendChild(canvas);
 						document.body.appendChild(div);
 						document.getElementById("elvishSpinner").style.display = "none";
+						document.getElementById('saveElvish').innerHTML = "Save as Image";
+						document.getElementById('saveElvish').disabled = "";
 					}
 				});
 			}
 			
 			function saveDwarvishImage() {
 				document.getElementById("dwarvishSpinner").style.display = "block";
+				document.getElementById('saveDwarvish').innerHTML = "Saving...";
+				document.getElementById('saveDwarvish').disabled = "true";
 				html2canvas(DwarvishOutput, {
 					onrendered: function(canvas) {
 						// canvas is the final rendered <canvas> element
@@ -145,6 +158,8 @@
 						document.body.appendChild(canvas);
 						document.body.appendChild(div);
 						document.getElementById("dwarvishSpinner").style.display = "none";
+						document.getElementById('saveDwarvish').innerHTML = "Save as Image";
+						document.getElementById('saveDwarvish').disabled = "";
 					}
 				});
 			}
@@ -172,8 +187,8 @@
 			
 			function getHash() {
 				if(window.location.hash) {
-					if(document.getElementById(window.location.hash.replace('#',''))){
-						switchToTab(window.location.hash.replace('#',''));
+					if(document.getElementById(window.location.hash.split("?")[0].replace('#',''))){
+						switchToTab(window.location.hash.split("?")[0].replace('#',''));
 					}
 				} else {
 					// Fragment doesn't exist
@@ -228,6 +243,16 @@
 					}
 				}
 				return "";
+			}
+			
+			function getURLParameter(name, url) {
+				if (!url) url = window.location.href;
+				name = name.replace(/[\[\]]/g, "\\$&");
+				var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+					results = regex.exec(url);
+				if (!results) return null;
+				if (!results[2]) return '';
+				return decodeURIComponent(results[2].replace(/\+/g, " "));
 			}
 		</script>
   </head>
@@ -313,7 +338,7 @@
 					<div class="mdl-card__supporting-text">
 						If you already have one of them installed, please use it to view this website to experience full functionality. 
 						<br>If not, you can download one of them, or use the free app for Windows and Android. 
-						<br>Don't like any of those options? Carry on.
+						<br>Don't like any of those options? Click Dismiss.
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
 						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://www.google.com/chrome/browser/" target="_blank">Get Chrome</a>
@@ -337,11 +362,11 @@
 						Transcription of text entered<br>above will appear here
 					</div>
 				</div>
-				<button id="saveElvish"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveElvishImage()">Save as Image</button>
+				<button id="saveElvish"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline" onclick="saveElvishImage()">Save as Image</button>
 				<div class="mdl-tooltip" for="saveElvish">
 					Save the transcription as an image
 				</div>
-				<span class="mdl-spinner mdl-js-spinner is-active" style="display:none" id="elvishSpinner"></span>
+				<span class="mdl-spinner mdl-js-spinner is-active inline" style="display:none" id="elvishSpinner"></span>
 				<h2>About Transcription</h2>
 				<p>Unlike Latin characters,  the Feanorian letters always make the same sound. For example, there is a Tengwa for the ‘SH’ sound. Since it would be impossible for this transcriber to determine which sound a letter makes (short of having a complete Tengwar/English dictionary), it uses the most common sound of each letter. If you are using Chrome or Firefox, the transcriber does in fact transcribe ch, sh, ng, etc. to their proper tengwa. If you are using another browser, the transcriber will use the separate tengwa for c and h, etc. To make the transcribing most accurate, spell everything phonetically. Use a capital ‘S’ when s sounds as it does in ‘Charges.’</p>
 			<h2>Browser Compatability</h2>
@@ -391,11 +416,11 @@
 						Transcription of text entered<br>above will appear here
 					</div>
 				</div>
-				<button id="saveDwarvish" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveDwarvishImage()">Save as Image</button>
+				<button id="saveDwarvish" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline" onclick="saveDwarvishImage()">Save as Image</button>
 				<div class="mdl-tooltip" for="saveDwarvish">
 					Save the transcription as an image
 				</div>
-				<span class="mdl-spinner mdl-js-spinner is-active" style="display:none" id="dwarvishSpinner"></span>
+				<span class="mdl-spinner mdl-js-spinner is-active inline" style="display:none" id="dwarvishSpinner"></span>
 				<h2>About Dwarvish Runes</h2>
 				<p>Dwarf Runes  were a runic script used by the <a href="http://lotr.wikia.com/wiki/Dwarves">Dwarves</a>, and was their main writing system. This Dwarven writing system utilizes runes and glyphs when written. Dwarf Runes were first created by the elven loremaster <a href="http://lotr.wikia.com/wiki/Daeron">Daeron</a> of Doriath and were called <a href="http://lotr.wikia.com/wiki/Cirth">Cirth</a> or Certar Daeron. Daeron was inspired by the <a href="http://lotr.wikia.com/wiki/Tengwar">Tengwar</a> script of <a href="http://lotr.wikia.com/wiki/F%C3%ABanor">Fëanor</a> and wanted to create a new script for his <a href="http://lotr.wikia.com/wiki/Sindar">Sindar kin</a>. The dwarves learned the runes from the elves and adapted them for their own language, <a href="http://lotr.wikia.com/wiki/Khuzdul">Khuzdûl</a>. The letters are thin and angular for they were designed for cutting or scratching on wood, stone, or metal. By the Third Age only the dwarves made regular use of them. The Cirth alphabet originally had nineteen characters which was sufficient for the <a href="http://lotr.wikia.com/wiki/Sindarin">Sindarin</a> language. More were later added by the <a href="http://lotr.wikia.com/wiki/Noldor">Noldor</a> of <a href="http://lotr.wikia.com/wiki/Eregion">Eregion</a> to make it easier to express certain subtle sounds in their language. This full expansion of the script is generally called Angerthas Daeron or Angerthas Eregion. After the destruction of Eregion the elves generally ceased to use Cirth at all. Dwarves made their own variations of the script called Angerthas Moria and Angerthas Erebor.<br>
 Some dwarves knew a secret way of writing runes called <a href="http://lotr.wikia.com/wiki/Moon_letters">Moon letters</a>. These runes were written with a silver pen and could only be seen under the light of the moon. With the more advanced forms of Moon letters it had to be a moon of the same shape and season as the day when the runes were written.<br>
@@ -829,12 +854,21 @@ in Khazad-dûm his wisdom died.
 			<p>Maps on this page from <a href="http://www.isbnsearch.org/isbn/0618002219" target="_blank"><i>The Hobbit</i></a> and <a href="http://www.isbnsearch.org/isbn/0618129014" target="_blank"><i>The Lord of the Rings</i></a> are protected by "fair use" under <a href="https://www.law.cornell.edu/uscode/text/17/107" target="_blank">Title 17 § 107</a> of the United States Code.</p>
 	    <h2>The Hobbit</h2>
 	    <h3>The Wilderland</h3>
-	    <a href="http://imgur.com/iMX16Oo.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/iMX16Oo.jpg" alt="The Wilderland" width="100%" height="auto"></a>
+	    <a href="http://imgur.com/iMX16Oo.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/iMX16Oo.jpg" alt="The Wilderland" width="100%" height="auto" id="map1"></a>
+			<div class="mdl-tooltip" for="map1">
+					The Wilderland Map<br>Click to view in new tab
+				</div>
 	    <h3>Thror's Map</h3>
-	    <a href="http://imgur.com/hvQ2EDx.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/hvQ2EDx.jpg" alt="Thror's Map" width="100%" height="auto"></a>
+	    <a href="http://imgur.com/hvQ2EDx.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/hvQ2EDx.jpg" alt="Thror's Map" width="100%" height="auto" id="map2"></a>
+			<div class="mdl-tooltip" for="map2">
+					Thror's Map<br>Click to view in new tab
+				</div>
 	    <h2>Lord of the Rings</h2>
 	    <h3>Middle-Earth</h3>
-	    <a href="http://imgur.com/nPOtnBd.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/nPOtnBd.jpg" alt="Middle-Earth" width="100%" height="auto"></a>
+	    <a href="http://imgur.com/nPOtnBd.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/nPOtnBd.jpg" alt="Middle-Earth" width="100%" height="auto" id="map3"></a>
+			<div class="mdl-tooltip" for="map3">
+					Middle Earth Map<br>Click to view in new tab
+				</div>
 				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text">Credits</h2>
@@ -950,6 +984,7 @@ in Khazad-dûm his wisdom died.
 					Download file hosted<br>on Google Drive
 			</div>
 			<h4>Screenshots</h4>
+			<div id="androidScreenshots"><!--screenshots!-->
 			<a href="images/ElvishTranscriber.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/ElvishTranscriber.png');">
 				<div class="mdl-card__title mdl-card--expand"></div>
 				</a>
@@ -977,6 +1012,10 @@ in Khazad-dûm his wisdom died.
 				<a href="images/Keyboard.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/Keyboard.png');">
 				<div class="mdl-card__title mdl-card--expand"></div>
 				</a>
+				</div><!--end screenshots!-->
+				<div class="mdl-tooltip" for="androidScreenshots">
+					Click on any image to view in new tab
+				</div>
       <h4>Features:</h4>
       <ul>
         <li>Elvish Transcriber</li>
@@ -1014,6 +1053,18 @@ in Khazad-dûm his wisdom died.
     </section><!--End Apps!-->
 		<section class="mdl-layout__tab-panel" id="Feedback"><!--Feedback!-->
       <div class="page-content">
+			<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;display:none;" id="thankyou"><!--thank you!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Thank You!</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Your feedback has been submitted.
+						<br>We should get back to you within 24 hours.<br>
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="document.getElementById('thankyou').style.display = 'none'">Dismiss</a>
+					</div>
+				</div><!--end thank you!-->
 			<h2>Submit Feedback Below</h2>
       <form action="https://formspree.io/maximiliandavy@gmail.com" method="POST">
 				<div class="mdl-textfield mdl-js-textfield">
@@ -1133,7 +1184,7 @@ in Khazad-dûm his wisdom died.
 						Enter your message<br>here (required)
 					</div>
 				</div>
-        <input type="hidden" name="_next" value="//tengwartranscriber.github.io/feedback.html?alert=1">    
+        <input type="hidden" name="_next" value="//tengwartranscriberbeta.github.io/#Feedback?alert=1">
         <input type="hidden" name="_subject" value="Feedback from Tengwar Transcriber">
 				<input type="submit" value="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
     </form>
