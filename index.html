@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Tengwar Feanor Elvish Transcriber</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-light_blue.min.css" />
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+		<script type="text/javascript" src="html2canvas.js"></script>
+    <style>
+			@font-face {
+			  font-family: 'Tengwar Feanor Regular';
+			  src: url('tengwarfeanorregular.ttf') format('truetype');
+			}
+			
+			@font-face {
+			  font-family: 'Dwarvish Regular';
+			  src: url('dwarvishregular.ttf') format('truetype');
+			}
+			
+			.page-content {
+				padding-left: 4rem;
+				padding-right: 4rem;
+			}
+			
+			.demo-card-wide {
+				margin-top: 2rem;
+				margin-bottom: 2rem;
+				width: 100%;
+				background-color: aliceblue;
+			}
+			
+			.elvishfont {
+				font-family: 'Tengwar Feanor Regular';
+				text-rendering: optimizeLegibility;
+				font-feature-settings: "kern";
+				-moz-font-feature-settings: "kern=1";
+				-ms-font-feature-settings: "kern";
+				-webkit-font-feature-settings: "kern";
+				-o-font-feature-settings: "kern";
+			}
+			
+			.dwarvishfont {
+				font-family: 'Dwarvish Regular'
+			}
+			
+			.mdl-textfield, .mdl-js-textfield, mdl-textfield__input {
+				width:100%;
+			}
+			
+			.fab {
+				position: fixed;
+				bottom: 20px;
+				right:30px;
+				z-index: 8;
+			}
+			
+			.fab2 {
+				position: fixed;
+				bottom: 20px;
+				right:100px;
+				z-index: 8;
+			}
+			
+			.imagecard {
+				background-position: center;
+				background-repeat: no-repeat;
+				background-size:contain;
+				margin: 2rem;
+				display: inline-block;
+			}
+		</style>
+		<script language="JavaScript">
+			function onLoad(){
+				var ElvishInput = document.getElementById('ElvishInput');
+				var ElvishOutput = document.getElementById('ElvishOutput');
+				var DwarvishInput = document.getElementById('DwarvishInput');
+				var DwarvishOutput = document.getElementById('DwarvishOutput');
+				ElvishInput.value = getCookie('text');
+				transcribeElvish();
+				DwarvishInput.value = getCookie('text');
+				transcribeDwarvish();
+				var browserWarning = document.getElementById('browserWarning');
+				var isChromium = window.chrome,
+				       vendorName = window.navigator.vendor,
+				       isOpera = window.navigator.userAgent.indexOf("OPR") > -1,
+				       isIEedge = window.navigator.userAgent.indexOf("Edge") > -1,
+							 isFirefox = window.navigator.userAgent.indexOf("Firefox") > 0,
+				       isIOSChrome = window.navigator.userAgent.match("CriOS");
+
+				if(isChromium !== null && isChromium !== undefined && vendorName === "Google Inc." && isOpera == false && isIEedge == false || isFirefox) {
+					browserWarning.style.display = 'none';
+				} else {
+					browserWarning.style.display = 'block';
+				}
+				getHash();
+			}
+			
+			function saveElvishImage() {
+				document.getElementById('elvishSpinner').style.display = "block";
+				html2canvas(ElvishOutput, {
+					onrendered: function(canvas) {
+						// canvas is the final rendered <canvas> element
+						var div = document.createElement("div");
+						div.style.cssText = "background-color: black;opacity: .5;position: fixed;left: 0;right: 0;z-index: 10;width: 100%;height: 100%;color:white;";
+						canvas.style.cssText = "background-color:white; z-index:12; position:fixed; top: 50%; left:50%; transform:translate(-50%, -50%);";
+						canvas.id = "canvas";
+						div.id = "div";
+						div.innerHTML = "Right click (desktop) or long press (mobile) image to download.<br>Click/tap anywhere to dismiss.";
+						canvas.onclick=function(){
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						}
+						div.onclick=function(){
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						}
+						document.body.appendChild(canvas);
+						document.body.appendChild(div);
+						document.getElementById("elvishSpinner").style.display = "none";
+					}
+				});
+			}
+			
+			function saveDwarvishImage() {
+				document.getElementById("dwarvishSpinner").style.display = "block";
+				html2canvas(DwarvishOutput, {
+					onrendered: function(canvas) {
+						// canvas is the final rendered <canvas> element
+						var div = document.createElement("div");
+						div.style.cssText = "background-color: black;opacity: .5;position: fixed;left: 0;right: 0;z-index: 10;width: 100%;height: 100%;color:white;";
+						canvas.style.cssText = "background-color:white; z-index:12; position:fixed; top: 50%; left:50%; transform:translate(-50%, -50%);";
+						canvas.id = "canvas";
+						div.id = "div";
+						div.innerHTML = "Right click (desktop) or long press (mobile) image to download.<br>Click/tap anywhere to dismiss.";
+						canvas.onclick=function(){
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						}
+						div.onclick=function(){
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						}
+						document.body.appendChild(canvas);
+						document.body.appendChild(div);
+						document.getElementById("dwarvishSpinner").style.display = "none";
+					}
+				});
+			}
+				
+			function transcribeElvish() {
+				ElvishOutput.value = " " + ElvishInput.value;
+        ElvishOutput.value = ElvishOutput.value.replace(/\n/g, '\n ').replace(/ a/g, " A").replace(/ e/g, " E").replace(/ i/g, " I").replace(/ o/g, " O").replace(/ u/g, " U").replace(/aa/g, "aA").replace(/ae/g, "aE").replace(/ai/g, "aI").replace(/ao/g, "aO").replace(/au/g, "aU").replace(/ea/g, "eA").replace(/ee/g, "eE").replace(/ei/g, "eI").replace(/eo/g, "eO").replace(/eu/g, "eU").replace(/ia/g, "iA").replace(/ie/g, "iE").replace(/ii/g, "iI").replace(/io/g, "iO").replace(/iu/g, "iU").replace(/oa/g, "oA").replace(/oe/g, "oE").replace(/oi/g, "oI").replace(/oo/g, "eO").replace(/ou/g, "oU").replace(/ua/g, "uA").replace(/ue/g, "uE").replace(/ui/g, "uI").replace(/uo/g, "uO").replace(/uu/g, "uU").replace(/ck/g, "c").replace(/Aa/g, "AA").replace(/Ae/g, "AE").replace(/Ai/g, "AI").replace(/Ao/g, "AO").replace(/Au/g, "AU").replace(/Ea/g, "EA").replace(/Ee/g, "EE").replace(/Ei/g, "EI").replace(/Eo/g, "EO").replace(/Eu/g, "EU").replace(/Ia/g, "IA").replace(/Ie/g, "IE").replace(/Ii/g, "II").replace(/Io/g, "IO").replace(/Iu/g, "IU").replace(/Oa/g, "OA").replace(/Oe/g, "OE").replace(/Oi/g, "OI").replace(/Oo/g, "OO").replace(/Ou/g, "OU").replace(/Ua/g, "UA").replace(/Ue/g, "UE").replace(/Ui/g, "UI").replace(/Uo/g, "UO").replace(/Uu/g, "UU");
+				if (ElvishInput.value !== "") {
+					document.getElementById("elvishLabel").style.display = 'none';
+				}else {
+					document.getElementById("elvishLabel").style.display = 'block';
+				}
+				setCookie('text', ElvishInput.value, 365);
+      }
+			
+			function transcribeDwarvish() {
+				DwarvishOutput.value = DwarvishInput.value;
+				if (DwarvishInput.value !== "") {
+					document.getElementById("dwarvishLabel").style.display = 'none';
+				}else {
+					document.getElementById("dwarvishLabel").style.display = 'block';
+				}
+				setCookie('text', DwarvishInput.value, 360);
+			}
+			
+			function getHash() {
+				if(window.location.hash) {
+					if(document.getElementById(window.location.hash.replace('#',''))){
+						switchToTab(window.location.hash.replace('#',''));
+					}
+				} else {
+					// Fragment doesn't exist
+				}
+			}
+			
+			function setHash(hash) {
+				window.location.hash = '#' + hash;
+			}
+			
+			function switchToTab(tab) {
+				var els = document.getElementsByClassName("mdl-layout__tab");
+
+				for (var i = 0, l = els.length; i < l; i++) {
+					var el = els[i];
+					if (el.href.includes(tab)){
+						el.className = "mdl-layout__tab is-active";
+					} else{
+						el.className = "mdl-layout__tab";
+					}
+				}
+				var els = document.getElementsByClassName("mdl-layout__tab-panel");
+				for (var i = 0, l = els.length; i < l; i++) {
+					var el = els[i];
+					if (el.id == tab){
+						el.className = "mdl-layout__tab-panel is-active";
+					} else{
+						el.className = "mdl-layout__tab-panel";
+					}
+				}
+				window.location.hash = '#'+tab;
+			}
+			
+			function setCookie(cname,cvalue,exdays) {
+				var d = new Date();
+				d.setTime(d.getTime() + (exdays*24*60*60*1000));
+				var expires = "expires=" + d.toGMTString();
+				document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+			}
+
+			function getCookie(cname) {
+				var name = cname + "=";
+				var decodedCookie = decodeURIComponent(document.cookie);
+				var ca = decodedCookie.split(';');
+				for(var i = 0; i < ca.length; i++) {
+					var c = ca[i];
+					while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+					}
+					if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+					}
+				}
+				return "";
+			}
+		</script>
+  </head>
+  <body onload="onLoad()">
+  <!-- Simple header with scrollable tabs. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Tengwar Feanor</span>
+    </div>
+    <!-- Tabs -->
+    <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+      <a id="mnu1" href="#ElvishTranscriber" onclick="setHash('ElvishTranscriber')" class="mdl-layout__tab is-active">Elvish Transcriber</a>
+			<div class="mdl-tooltip" for="mnu1">
+				Transcribe Latin characters<br>to Elvish characters
+			</div>
+      <a id="mnu2" href="#DwarvishTranscriber" onclick="setHash('DwarvishTranscriber')" class="mdl-layout__tab">Dwarvish Transcriber</a>
+			<div class="mdl-tooltip" for="mnu2">
+				Transcribe Latin characters<br>to Dwarvish runes
+			</div>
+      <a id="mnu3" href="#AboutElvish" onclick="setHash('AboutElvish')" class="mdl-layout__tab">About Elvish</a>
+			<div class="mdl-tooltip" for="mnu3">
+				Learn about the Tengwar
+			</div>
+      <a id="mnu4" href="#AboutDwarvish" onclick="setHash('AboutDwarvish')" class="mdl-layout__tab">About Dwarvish</a>
+			<div class="mdl-tooltip" for="mnu4">
+				Learn about the Angerthas Erebor
+			</div>
+      <a id="mnu5" href="#Songs" onclick="setHash('Songs')" class="mdl-layout__tab">Songs</a>
+			<div class="mdl-tooltip" for="mnu5">
+				Songs and poems from<br>Tolkien's works
+			</div>
+      <a id="mnu6" href="#Maps" onclick="setHash('Maps')" class="mdl-layout__tab">Maps</a>
+			<div class="mdl-tooltip" for="mnu6">
+				Middle-Earth maps from<br>Lord of the Rings and the Hobbit
+			</div>
+			<a id="mnu7" href="#Fonts" onclick="setHash('Fonts')" class="mdl-layout__tab">Fonts</a>
+			<div class="mdl-tooltip" for="mnu7">
+				Download the Elvish<br>and Dwarvish fonts
+			</div>
+			<a id="mnu8" href="#Apps" onclick="setHash('Apps')" class="mdl-layout__tab">Apps</a>
+			<div class="mdl-tooltip" for="mnu8">
+				Get the free Tengwar Feanor<br>apps for Windows and Android
+			</div>
+			<a id="mnu9" href="#Feedback" onclick="setHash('Feedback')" class="mdl-layout__tab">Feedback</a>
+			<div class="mdl-tooltip" for="mnu9">
+				Give us feedback
+			</div>
+    </div>
+  </header>
+  <main class="mdl-layout__content">
+	<noscript>
+			<div class="demo-card-wide mdl-card mdl-shadow--2dp"  id="jsWarning"><!--js warning!-->
+				<div class="mdl-card__title">
+					<h2 class="mdl-card__title-text" style="color:red" >
+					Your browser has Javascript disabled.
+					<br>This is serious.
+					<br>The transcribers won't work.
+					<br>The page won't render correctly.
+					<br>You won't be able to switch to other tabs.
+					<br>So enable Javascript now or this website will be UNUSABLE.
+					<br>And that would be a real tragedy, wouldn't it?</h2>
+				</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" style="color:green" href="http://www.enable-javascript.com" target="_blank">How to enable Javascript</a>
+					</div>
+				</div><!--end js warning!-->
+				</noscript>
+    <section class="mdl-layout__tab-panel is-active" id="ElvishTranscriber"><!--Elvish Transcriber!-->
+      <div class="page-content">
+			<!-- Colored FAB button with ripple -->
+				<a onclick="switchToTab('Fonts');" href="tengwarfeanorregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="elvishDownload">
+					<i class="material-icons">file_download</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="elvishDownload">
+					Download the Elvish font
+				</div>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="display: none" id="browserWarning"><!--browser recomendation!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">This page would work better in Chrome or Firefox</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						If you already have one of them installed, please use it to view this website to experience full functionality. 
+						<br>If not, you can download one of them, or use the free app for Windows and Android. 
+						<br>Don't like any of those options? Carry on.
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://www.google.com/chrome/browser/" target="_blank">Get Chrome</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://www.mozilla.org/en-US/firefox/" target="_blank">Get Firefox</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Apps')" target="_blank">Get App</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" style="position: absolute;
+    right: 10px;" onclick="document.getElementById('browserWarning').style.display = 'none'">Dismiss</a>
+					</div>
+				</div><!--end browser recomendation!-->
+				<div class="mdl-textfield mdl-js-textfield field">
+					<textarea class="mdl-textfield__input" type="text" rows= "5" id="ElvishInput" oninput="transcribeElvish()"></textarea>
+					<label class="mdl-textfield__label" for="ElvishInput">Text Entered here will be tranScribed</label>
+					<div class="mdl-tooltip" for="ElvishInput">
+						Enter text here to<br> transcribe to Elvish
+					</div>
+				</div>
+				<div class="mdl-textfield mdl-js-textfield field">
+					<textarea class="mdl-textfield__input elvishfont" type="text" rows= "5" id="ElvishOutput" readonly></textarea>
+					<label class="mdl-textfield__label elvishfont" id="elvishLabel" for="ElvishOutput">Text Entered Above will Appear here</label>
+					<div class="mdl-tooltip" for="ElvishOutput">
+						Transcription of text entered<br>above will appear here
+					</div>
+				</div>
+				<button id="saveElvish"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveElvishImage()">Save as Image</button>
+				<div class="mdl-tooltip" for="saveElvish">
+					Save the transcription as an image
+				</div>
+				<span class="mdl-spinner mdl-js-spinner is-active" style="display:none" id="elvishSpinner"></span>
+				<h2>About Transcription</h2>
+				<p>Unlike Latin characters,  the Feanorian letters always make the same sound. For example, there is a Tengwa for the ‘SH’ sound. Since it would be impossible for this transcriber to determine which sound a letter makes (short of having a complete Tengwar/English dictionary), it uses the most common sound of each letter. If you are using Chrome or Firefox, the transcriber does in fact transcribe ch, sh, ng, etc. to their proper tengwa. If you are using another browser, the transcriber will use the separate tengwa for c and h, etc. To make the transcribing most accurate, spell everything phonetically. Use a capital ‘S’ when s sounds as it does in ‘Charges.’</p>
+			<h2>Browser Compatability</h2>
+			<p>Tengwar Transcriber works best in Chrome or Firefox. Safari, Edge, and Internet Explorer do not support all features. If you use Opera or another browser that is not listed, please let me know how it works on the Feedback page.</p>
+			<h2>About Elvish</h2>
+			<p>According to J. R. R. Tolkien's legendarium, the lettering system known as the Feanorian letters or "Elvish" was brought to Middle-earth by the exiled Noldor. The consonantal signs are called Tengwar (singular Tengwa) and the vowel sounds are represented by tehtar (singular tehta), which are placed over the previous consonant or a carrier, which looks like an ‘i’ without a dot.<br>
+			The Feanorian letters were designed to be adapted to represent different languages, so there were different methods, or modes, for writing in Quenya, Sindarin, Westron, Black Speech, etc. There is no mode for representing English; the one designed for use here is substantially similar to that used by other transcribers. Full article <a onclick="switchToTab('AboutElvish');" href="#AboutElvish">here</a>. More complete information can be found in appendix E of The Lord of the Rings. <a href="https://en.wikipedia.org/wiki/Tengwar" target="_blank">Wikipedia</a> and <a href="http://lotr.wikia.com/wiki/Tengwar" target="_blank">Lord of the Rings Wikia</a> also have good articles.</p>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/us/88x31.png"></a>Work obtained from <a href="https://en.wikipedia.org/wiki/Tengwar">Wikipedia</a> and is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/us/">Creative Commons Attribution-ShareAlike 3.0 United States License</a>
+						<br>Fonts created with <a href="https://birdfont.org/" target="_blank">Birdfont</a>, a free font editor by Johan Mattsson
+						<br>Elvish glyphs originally from <a href="http://www.dafont.com/tengwar-annatar.font" target="_blank">Tengwar Annatar</a> by Johan Winge
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Elvish Transcriber!-->
+    <section class="mdl-layout__tab-panel" id="DwarvishTranscriber"><!--Dwarvish Transcriber!-->
+      <div class="page-content">
+			<a onclick="switchToTab('Fonts');" href="dwarvishregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="dwarvishDownload">
+					<i class="material-icons">file_download</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="dwarvishDownload">
+					Download the Dwarvish font
+				</div>
+				<!-- Floating Multiline Textfield -->
+				<div class="mdl-textfield mdl-js-textfield field">
+					<textarea class="mdl-textfield__input" type="text" rows= "5" id="DwarvishInput" oninput="transcribeDwarvish()"></textarea>
+					<label class="mdl-textfield__label" for="DwarvishInput">Text entered here will be transcribed</label>
+					<div class="mdl-tooltip" for="DwarvishInput">
+						Enter text here to<br> transcribe to Dwarvish
+					</div>
+				</div>
+				<div class="mdl-textfield mdl-js-textfield field">
+					<textarea class="mdl-textfield__input dwarvishfont" type="text" rows= "5" id="DwarvishOutput" readonly></textarea>
+					<label class="mdl-textfield__label dwarvishfont" for="DwarvishOutput" id="dwarvishLabel">Transcribed text will appear here</label>
+					<div class="mdl-tooltip" for="DwarvishOutput">
+						Transcription of text entered<br>above will appear here
+					</div>
+				</div>
+				<button id="saveDwarvish" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick="saveDwarvishImage()">Save as Image</button>
+				<div class="mdl-tooltip" for="saveDwarvish">
+					Save the transcription as an image
+				</div>
+				<span class="mdl-spinner mdl-js-spinner is-active" style="display:none" id="dwarvishSpinner"></span>
+				<h2>About Dwarvish Runes</h2>
+				<p>Dwarf Runes  were a runic script used by the <a href="http://lotr.wikia.com/wiki/Dwarves">Dwarves</a>, and was their main writing system. This Dwarven writing system utilizes runes and glyphs when written. Dwarf Runes were first created by the elven loremaster <a href="http://lotr.wikia.com/wiki/Daeron">Daeron</a> of Doriath and were called <a href="http://lotr.wikia.com/wiki/Cirth">Cirth</a> or Certar Daeron. Daeron was inspired by the <a href="http://lotr.wikia.com/wiki/Tengwar">Tengwar</a> script of <a href="http://lotr.wikia.com/wiki/F%C3%ABanor">Fëanor</a> and wanted to create a new script for his <a href="http://lotr.wikia.com/wiki/Sindar">Sindar kin</a>. The dwarves learned the runes from the elves and adapted them for their own language, <a href="http://lotr.wikia.com/wiki/Khuzdul">Khuzdûl</a>. The letters are thin and angular for they were designed for cutting or scratching on wood, stone, or metal. By the Third Age only the dwarves made regular use of them. The Cirth alphabet originally had nineteen characters which was sufficient for the <a href="http://lotr.wikia.com/wiki/Sindarin">Sindarin</a> language. More were later added by the <a href="http://lotr.wikia.com/wiki/Noldor">Noldor</a> of <a href="http://lotr.wikia.com/wiki/Eregion">Eregion</a> to make it easier to express certain subtle sounds in their language. This full expansion of the script is generally called Angerthas Daeron or Angerthas Eregion. After the destruction of Eregion the elves generally ceased to use Cirth at all. Dwarves made their own variations of the script called Angerthas Moria and Angerthas Erebor.<br>
+Some dwarves knew a secret way of writing runes called <a href="http://lotr.wikia.com/wiki/Moon_letters">Moon letters</a>. These runes were written with a silver pen and could only be seen under the light of the moon. With the more advanced forms of Moon letters it had to be a moon of the same shape and season as the day when the runes were written.<br>
+The runes of the dwarves were adopted by Tolkien from the Anglo-Saxon and Scandinavian rune scripts. The runes that this transcriber uses are the Angerthas Erebor (as seen on Thror’s map in the hobbit). Full article <a onclick="switchToTab('AboutDwarvish');" href="#AboutDwarvish">here</a>.</p>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/us/88x31.png"></a>Work obtained from <a href="https://en.wikipedia.org/wiki/Tengwar">Wikipedia</a> and is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/us/">Creative Commons Attribution-ShareAlike 3.0 United States License</a>
+						<br>Fonts created with <a href="https://birdfont.org/" target="_blank">Birdfont</a>, a free font editor by Johan Mattsson
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Dwarvish Transcriber!-->
+    <section class="mdl-layout__tab-panel" id="AboutElvish"><!--About Elvish!-->
+      <div class="page-content">
+			<a href="https://www.wikiwand.com/en/Tengwar" target="_blank" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="elvishArticle">
+					<i class="material-icons">open_in_new</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="elvishArticle">
+					Open Wikipedia Article
+				</div>
+				<h2><a id="Summary_0"></a>Summary</h2>
+<p>The Tengwar are an artificial script created by J. R. R. Tolkien. Within the fictional context of Tolkien’s legendarium, the tengwar were invented by the Elf Fëanor, and used first to write the Elven tongues Quenya and Telerin. Later a great number of languages of Middle-earth were written using the tengwar, including Sindarin.</p>
+<h2><a id="Fictional_History_and_Terminology_2"></a>Fictional History and Terminology</h2>
+<p>According to The War of the Jewels (Appendix D to Quendi and Eldar), Fëanor, when he created his script, introduced a change in terminology. He called a letter, i.e. a written representation of a spoken phoneme (tengwë) a tengwa. Previously, any letter or symbol had been called a sarat (from *sar “incise”). The alphabet of Rúmil of Valinor, on which Fëanor supposedly based his own work, was known as sarati. It later became known as “Tengwar of Rúmil”.<br>
+The plural of tengwa was tengwar, and this is the name by which Fëanor’s system became known. Since, however, in commonly used modes, an individual tengwa was equivalent to a consonant, the term tengwar in popular use became equivalent to “consonant sign”, and the vowel signs were known as ómatehtar. By loan-translation, the tengwar became known as tîw (singular têw) in Sindarin, when they were introduced to Beleriand. The letters of the earlier alphabet native to Sindarin were called cirth (singular certh, probably from *kirte “cutting”, and thus semantically analogous to Quenya sarat). This term was loaned into exilic Quenya as certa, plural certar.</p>
+<h2><a id="Complicated_Linguistic_Stuff_5"></a>Complicated Linguistic Stuff</h2>
+<p>The most notable characteristic of the tengwar script is that the shapes of the letters correspond to the distinctive features of the sounds they represent. The Quenya consonant system has 5 places of articulation: labial, dental, palatal, velar, and glottal. The velars distinguish between plain and labialized (that is, articulated with rounded lips, or followed by a [w] sound). Each point of articulation, and the corresponding tengwa series, has a name in the classical Quenya mode. Dental sounds are called Tincotéma and are represented with the tengwar in column I. Labial sounds are called Parmatéma, and represented by the column II tengwar; velar sounds are called Calmatéma, represented by column III; and labialized velar sounds are called Quessetéma, represented by the tengwar of column IV. Palatal sounds are called Tyelpetéma and have no tengwa series of their own, but are represented by column III letters with an added diacritic for following [j].<br>
+Similarly shaped letters reflect not only similar places of articulation, but also similar manners of articulation. In the classical Quenya mode, row 1 represents voiceless stops, row 2 voiced prenasalized stops, row 3 voiceless fricatives, row 4 voiceless prenasalized stops, row 5 nasal stops, and row 6 approximants.</p>
+<p>Most letters are constructed by a combination of two basic shapes: a vertical stem (either long or short) and either one or two rounded bows (which may or may not be underscored, and may be on the left or right of the stem).<br>
+These principal letters are divided into four series (“témar”) that correspond to the main places of articulation and into six grades (“tyeller”) that correspond to the main manners of articulation. Both vary among modes.<br>
+Each series is headed by the basic signs composed of a vertical stem descending below the line, and a single bow. These basic signs represent the voiceless stop consonants for that series. For the classical Quenya mode, they are /t/, /p/, /k/ and /kʷ/, and the series are named tincotéma, parmatéma, calmatéma, and quessetéma, respectively; téma means “series” in Quenya.<br>
+In rows of the general use, there are the following correspondences between letter shapes and manners of articulation:</p>
+<ul>
+<li>Doubling the bow turns the voiceless consonant into a voiced one.</li>
+<li>Raising the stem above the line turns it into the corresponding fricative.</li>
+<li>Shortening it (so it is only the height of the bow) creates the corresponding nasal. In most modes, the signs with shortened stem and single bow do not correspond to the voiceless nasals, but to the approximants.</li>
+</ul>
+<p>In addition to these variations of the tengwar shapes, there is yet another variation, the use of stems that are extended both above and below the line. This shape may correspond to other consonant variations required. Except for some English abbreviations, it is not used in any of the better known tengwar modes, but it occurs in a Qenya mode where the tengwa Parma with extended stem is used for /pt/ and the tengwa Calma with extended stem is used for /kt/. The tengwar with raised stems sometimes occur in glyph variants that look like extended stems, as seen in the inscription of the One Ring.</p>
+<h2><a id="Tehtar_Vowels_18"></a>Tehtar (Vowels)</h2>
+<p>A tehta (Quenya “marking”) is a diacritic placed above or below the tengwa. They can represent vowels, consonant doubling, or nasal sound.<br>
+As Tolkien explained in the ROTK appendix, the tehtar for vowels resemble Latin diacritics: circumflex (î) /a/, acute (í) /e/, dot (i) /i/, left curl (ı̔ ) /o/, and right curl (ı̓ ) /u/. (Some languages without /o/, such as the Black Speech, use left curl ı̔ for /u/; other languages reverse the signs for /e/ and /i/.) A vowel occurring alone is drawn on the vowel carrier, which resembles dotless i (ı) for a short vowel or dotless j (ȷ) for a long vowel.</p>
+<h2><a id="Modes_21"></a>Modes</h2>
+<p>Just as with any alphabetic writing system, every specific language written in tengwar requires a specific orthography, depending on the phonology of that language. These tengwar orthographies are usually called modes. Some modes follow pronunciation, while others follow traditional orthography.<br>
+In some modes, called ómatehtar (or vowel tehtar) modes, the vowels are represented with diacritics called tehtar (Quenya for ‘signs’; corresponding singular: tehta, ‘sign’). These ómatehtar modes can be loosely considered abjads rather than true alphabets. In some ómatehtar modes, the consonant signs feature an inherent vowel. These ómatehtar modes can be considered alphasyllabaries.<br>
+Ómatehtar modes can vary in that the vowel stroke can be placed either on top of the consonant preceding it, as in Quenya (which this transcriber uses), or on the consonant following, as in Sindarin, English, and the notorious Black Speech inscription on the One Ring. The other main difference is in the fourth tyellë below, where those letters with raised stems and doubled bows can be either voiced fricatives, as in Sindarin (general mode at right), or nasalized stops, as in Quenya (classical mode).</p>
+<p>&#8203;In the full writing modes, the consonants and the vowels are represented by Tengwar. Only one such mode is well known. It is called the “mode of Beleriand” and one can read it on the Doors of Durin.</p>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/us/88x31.png"></a>Work obtained from <a href="https://en.wikipedia.org/">Wikipedia</a> and is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/us/">Creative Commons Attribution-ShareAlike 3.0 United States License</a>
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End About Elvish!-->
+    <section class="mdl-layout__tab-panel" id="AboutDwarvish"><!--About Dwarvish!-->
+      <div class="page-content">
+			<a href="https://www.wikiwand.com/en/Cirth" target="_blank" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="dwarvishArticle">
+					<i class="material-icons">open_in_new</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="dwarvishArticle">
+					Open Wikipedia Article
+				</div>
+			<h2><a id="Summary_0"></a>Summary</h2>
+<p>The Cirth ([ˈkirθ]; plural of certh [ˈkɛrθ], in Sindarin meaning runes) are a semi-artificial script, with letters shaped on those of actual runic alphabets, invented by J. R. R. Tolkien for the constructed languages he devised and used in his works. Cirth is written with a capital letter when referring to the writing system; the runes themselves can be called cirth.<br>
+In the fictional history of Middle-earth, the original Certhas Daeron was created by the elf Daeron, and was later expanded into what was known as the Angerthas Daeron. Although the Cirth were later largely replaced by the Tengwar, they were adopted by Dwarves to write down their Khuzdul language, Angerthas Moria and Angerthas Erebor (used in this transcriber), because their straight lines were better suited to carving than the curved strokes of the Tengwar. Cirth was also adapted, in its oldest and simplest form, by various peoples including Men and even Orcs.</p>
+<h2><a id="Origin_3"></a>Origin</h2>
+<p>During the Chaining of Melkor, the Sindar of Beleriand began developing an alphabet for their language. Its letters were entirely made for carving on wood, stone or metal, hence their angular forms and straight lines. These letters were named cirth (sing. certh). The corresponding Quenya words are certar ([ˈkɛrtɑr]) and certa ([ˈkɛrtɑ]). The assignment of values was unsystematic. The form of a certh consisted of a stem and a branch. The attachment of the branch was, if on one side only, usually made on the right side. The reverse was not infrequent, but had no phonetic significance. Two basic principles were followed:</p>
+<ul>
+<li>adding a stroke to a branch added voice;</li>
+<li>placing the branch on both sides of the stem added voice and nasality.</li>
+</ul>
+<p>The elf Daeron, minstrel of king Thingol of Doriath reorganised the cirth and added new ones, being somehow inspired by Fëanor’s Tengwar (therefore this mustn’t have occurred before the return of the Noldor) and made the extension of the cirth known as Certhas Daeron (where “Certhas” means “runic alphabet”), used for inscribing names in Menegroth. The Dwarves working for Thingol liked them and adopted them, making them known also in the East.<br>
+Daeron’s alphabet was originally used by the Grey Elves (Sindar) in Beleriand. Later the Noldor in Eregion adopted the Cirth, added several more runes to the system and created the Angerthas Daeron (where “Angerthas” means “long rune-rows”) sometimes also referred to as Angerthas Eregion. These additional letters were used to represent sounds not found in Sindarin, but present in the tongues of other peoples. The Angerthas Daeron was used primarily for carved inscriptions. For most other forms of written communication the Tengwar were used.</p>
+<h2><a id="Angerthas_Moria_10"></a>Angerthas Moria</h2>
+<p>Dwarves first came to know the runes of the Noldor during the beginning of the Second Age. They modified them to suit the specific needs of their language, Khuzdul. The Dwarves spread their revised alphabet to Moria, where it came to be known as Angerthas Moria. The Dwarves developed both carved and pen-written forms of the runes. Travelling for trading, they spread their alphabet throughout Middle-earth: as a result, variations of Angerthas Moria were employed by other races for their languages.<br>
+These are the runes most often used in <em>The Lord of the Rings</em>.</p>
+<h2><a id="Angerthas_Erebor_13"></a>Angerthas Erebor</h2>
+<p>According to Tolkien’s legendarium, after the Second Age, the Cirth were obsoleted by the Tengwar among the western races and remained in use only by Dwarves and Men. The Dwarves developed even pen-written cursive forms, since they used them exclusively in any form of writing communication, even in paper. At the beginning of the Third Age, the Dwarves were driven out of Moria. Some migrated to the Grey Mountains, some to the Iron Hills and Thráin I came to Erebor. There he founded his Dwarf-kingdom. There the Angerthas Moria was modified further and some new cirth were added, but some reverted to their Elvish usage, thus creating the Angerthas Erebor variation. This mode was used in Westron by Dwarves and is the mode used in <em>The Hobbit</em> and this transcriber.</p>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br><a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/us/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/3.0/us/88x31.png"></a>Work obtained from <a href="https://en.wikipedia.org/">Wikipedia</a> and is licensed under a <a href="http://creativecommons.org/licenses/by-sa/3.0/us/">Creative Commons Attribution-ShareAlike 3.0 United States License</a>
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End About Dwarvish!-->
+    <section class="mdl-layout__tab-panel" id="Songs"><!--Songs!-->
+      <div class="page-content">
+			<p>Songs and Poems on this page from J.R.R. Tolkien's works are protected by "fair use" under <a href="https://www.law.cornell.edu/uscode/text/17/107" target="_blank">Title 17 § 107</a> of the United States Code.</p>
+			<br>
+			<a href="#Durin">Song of Durin</a><br>
+      <a href="#Mountain">Song of the Lonely Mountain</a><br>
+      <a href="#Elbereth">Song to Elbereth</a><br>
+      <a href="#Road">The Road Goes Ever On</a><br>
+      <a href="#Ent">The Ent and Entwife</a><br>
+      <a href="#Gandalf">Lament for Gandalf</a><br>
+      <h2 id="Durin">Song of Durin</h2>
+      <p>An excellent arrangement by <a href="https://www.youtube.com/channel/UCC8prZi7q1vnP0A3XX4EWxQ" target="_blank">Clamavi De Profundis</a></p>
+      <iframe style="width:560px;height:315px;" width="560px" height="315px" src="https://www.youtube.com/embed/uxfoa23skHg" frameborder="0" allowfullscreen=""></iframe>
+        <p>The world was young, the mountains green,<br>
+No stain yet on the Moon was seen,<br>
+No words were laid on stream or stone<br>
+When Durin woke and walked alone.<br>
+He named the nameless hills and dells;<br>
+He drank from yet untasted wells;<br>
+He stooped and looked in Mirrormere,<br>
+And saw a crown of stars appear,<br>
+As gems upon a silver thread,<br>
+Above the shadows of his head.<br><br>
+The world was fair, the mountains tall,<br>
+In Elder Days before the fall<br>
+Of mighty kings in Nargothrond<br>
+And Gondolin, who now beyond<br>
+The Western Seas have passed away:<br>
+The world was fair in Durin's Day.<br><br>
+A king he was on carven throne<br>
+In many-pillared halls of stone<br>
+With golden roof and silver floor,<br>
+And runes of power upon the door.<br>
+The light of sun and star and moon<br>
+In shining lamps of crystal hewn<br>
+Undimmed by cloud or shade of night<br>
+There shone for ever fair and bright.<br><br>
+There hammer on the anvil smote<br>
+There chisel clove, and graver wrote;<br>
+There forged was blade, and bound was hilt;<br>
+The delver mined, the mason built.<br>
+There beryl, pearl, and opal pale,<br>
+And metal wrought like fishes' mail,<br>
+Buckler and corslet, axe and sword,<br>
+And shining spears were laid in hoard.<br><br>
+Unwearied then were Durin's folk;<br>
+Beneath the mountains music woke:<br>
+The harpers harped, the minstrels sang,<br>
+And at the gates the trumpets rang.<br><br>
+The world is grey, the mountains old,<br>
+The forge's fire is ashen-cold;<br>
+No harp is wrung, no hammer falls:<br>
+The darkness dwells in Durin's halls;<br>
+The shadow lies upon his tomb<br>
+In Moria, in Khazad-dûm.<br>
+But still the sunken stars appear<br>
+In dark and windless Mirrormere;<br>
+There lies his crown in water deep,<br>
+Till Durin wakes again from sleep.<br>
+      </p>
+      <h2 id="Mountain">Song of the Lonely Mountain</h2>
+      <p>Another excellent arrangement by <a href="https://www.youtube.com/channel/UCC8prZi7q1vnP0A3XX4EWxQ" target="_blank">Clamavi De Profundis</a><br>
+	 Note that the first and last verses of <a href="#Durin">Song of Durin</a> are inserted after verse 9</p>
+      <iframe style="width:560px;height:315px;" width="560px" height="315px" src="https://www.youtube.com/embed/LY0lLcz3Qis" frameborder="0" allowfullscreen=""></iframe>
+        <p>
+Far over the misty mountains cold<br>
+To dungeons deep and caverns old<br>
+We must away ere break of day<br>
+To seek the pale enchanted gold.<br>
+<br>
+The dwarves of yore made mighty spells,<br>
+While hammers fell like ringing bells<br>
+In places deep, where dark things sleep,<br>
+In hollow halls beneath the fells.<br>
+<br>
+For ancient king and elvish lord<br>
+There many a gleaming golden hoard<br>
+They shaped and wrought, and light they caught<br>
+To hide in gems on hilt of sword.<br>
+<br>
+On silver necklaces they strung<br>
+The flowering stars, on crowns they hung<br>
+The dragon-fire, in twisted wire<br>
+They meshed the light of moon and sun.<br>
+<br>
+Far over the misty mountains cold<br>
+To dungeons deep and caverns old<br>
+We must away, ere break of day,<br>
+To claim our long-forgotten gold.<br>
+<br>
+Goblets they carved there for themselves<br>
+And harps of gold; where no man delves<br>
+There lay they long, and many a song<br>
+Was sung unheard by men or elves.<br>
+<br>
+The pines were roaring on the height,<br>
+The winds were moaning in the night.<br>
+The fire was red, it flaming spread;<br>
+The trees like torches blazed with light.<br>
+<br>
+The bells were ringing in the dale<br>
+And men they looked up with faces pale;<br>
+The dragon’s ire more fierce than fire<br>
+Laid low their towers and houses frail.<br>
+<br>
+The mountain smoked beneath the moon;<br>
+The dwarves they heard the tramp of doom.<br>
+They fled their hall to dying fall<br>
+Beneath his feet, beneath the moon.<br>
+<br>
+Far over the misty mountains grim<br>
+To dungeons deep and caverns dim<br>
+We must away, ere break of day,<br>
+To win our harps and gold from him!<br>
+<br>
+The wind was on the withered heath,<br>
+but in the forest stirred no leaf:<br>
+there shadows lay be night or day,<br>
+and dark things silent crept beneath.<br>
+The wind came down from mountains cold,<br>
+and like a tide it roared and rolled;<br>
+the branches groaned, the forest moaned,<br>
+and leaves were laid upon the mould.<br>
+<br>
+The wind went on from West to East;<br>
+all movement in the forest ceased,<br>
+but shrill and harsh across the marsh<br>
+its whistling voices were released.<br>
+<br>
+The grasses hissed, their tassels bent,<br>
+the reeds were rattling--on it went<br>
+o'er shaken pool under heavens cool<br>
+where racing clouds were torn and rent.<br>
+<br>
+It passed the Lonely Mountain bare<br>
+and swept above the dragon's lair:<br>
+there black and dark lay boulders stark<br>
+and flying smoke was in the air.<br>
+<br>
+It left the world and took its flight<br>
+over the wide seas of the night.<br>
+The moon set sail upon the gale,<br>
+and stars were fanned to leaping light.<br>
+<br>
+Under the Mountain dark and tall<br>
+The King has come unto his hall!<br>
+His foe is dead, the Worm of Dread,<br>
+And ever so his foes shall fall.<br>
+The sword is sharp, the spear is long,<br>
+The arrow swift, the Gate is strong;<br>
+The heart is bold that looks on gold;<br>
+The dwarves no more shall suffer wrong.<br>
+<br>
+The dwarves of yore made mighty spells,<br>
+While hammers fell like ringing bells<br>
+In places deep, where dark things sleep,<br>
+In hollow halls beneath the fells.<br>
+<br>
+On silver necklaces they strung<br>
+The light of stars, on crowns they hung<br>
+The dragon-fire, from twisted wire<br>
+The melody of harps they wrung.<br>
+<br>
+The mountain throne once more is freed!<br>
+O! wandering folk, the summons heed!<br>
+Come haste! Come haste! across the waste!<br>
+The king of friend and kin has need.<br>
+<br>
+Now call we over the mountains cold,<br>
+‘Come back unto the caverns old’!<br>
+Here at the Gates the king awaits,<br>
+His hands are rich with gems and gold.<br>
+<br>
+The king is come unto his hall<br>
+Under the Mountain dark and tall.<br>
+The Worm of Dread is slain and dead,<br>
+And ever so our foes shall fall!
+      </p>
+      <h2 id="Elbereth">Hymn to Elbereth</h2>
+      <p>
+Snow-white! Snow-white! O Lady clear!<br>
+O Queen beyond the Western Seas!<br>
+O light to us that wander here<br>
+Amid the world of woven trees!<br>
+<br>
+Gilthoniel! O Elbereth!<br>
+Clear are thy eyes and bright thy breath!<br>
+Snow-white! Snow-white! We sing to thee<br>
+In a far land beyond the sea.<br>
+<br>
+O Stars that in the Sunless Year<br>
+With shining hand by her were sown,<br>
+In windy fields now bright and clear<br>
+We see you silver blossom blown!<br>
+<br>
+O Elbereth! Gilthoniel!<br>
+We still remember, we who dwell<br>
+In this far land beneath the trees,<br>
+Thy starlight on the Western Seas.
+      </p>
+      <h2 id="Road">The Road Goes Ever On</h2>
+      <p>
+Roads go ever ever on,<br>
+Over rock and under tree,<br>
+By caves where never sun has shone,<br>
+By streams that never find the sea;<br>
+Over snow by winter sown,<br>
+And through the merry flowers of June,<br>
+Over grass and over stone,<br>
+And under mountains in the moon.<br>
+<br>
+Roads go ever ever on<br>
+Under cloud and under star,<br>
+Yet feet that wandering have gone<br>
+Turn at last to home afar.<br>
+Eyes that fire and sword have seen<br>
+And horror in the halls of stone<br>
+Look at last on meadows green<br>
+And trees and hills they long have known.<br>
+<br>
+The Road goes ever on and on<br>
+Out from the door where it began.<br>
+Now far ahead the Road has gone,<br>
+Let others follow it who can!<br>
+Let them a journey new begin,<br>
+But I at last with weary feet<br>
+Will turn towards the lighted inn,<br>
+My evening-rest and sleep to meet.
+      </p>
+      <h2 id="Ent">The Ent and Entwife</h2>
+      <p>
+	      <em>Ent:</em><br>
+When Spring unfolds the beechen leaf, and sap is in the bough;<br>
+When light is on the wild-wood stream, and wind is on the brow;<br>
+When stride is long, and breath is deep, and keen the mountain-air,<br>
+Come back to me! Come back to me, and say my land is fair!<br>
+	      <em>Entwife:</em><br>
+When Spring is come to garth and field, and corn is in the blade;<br>
+When blossom like a shining snow is on the orchard laid;<br>
+When shower and Sun upon the Earth with fragrance fill the air,<br>
+I'll linger here, and will not come, because my land is fair.<br>
+	      <em>Ent:</em><br>
+When Summer lies upon the world, and in a noon of gold<br>
+Beneath the roof of sleeping leaves the dreams of trees unfold;<br>
+When woodland halls are green and cool, and wind is in the West,<br>
+Come back to me! Come back to me, and say my land is best!<br>
+	      <em>Entwife:</em><br>
+When Summer warms the hanging fruit and burns the berry brown;<br>
+When Straw is gold, and ear is white, and harvest comes to town;<br>
+When honey spills, and apple swells, though wind be in the West,<br>
+I'll linger here beneath the Sun, because my land is best!<br>
+	      <em>Ent:</em><br>
+When Winter comes, the winter wild that hill and wood shall slay;<br>
+When trees shall fall and starless night devour the sunless day;<br>
+When wind is in the deadly East, then in the bitter rain<br>
+I'll look for thee, and call to thee; I'll come to thee again!<br>
+	      <em>Entwife:</em><br>
+When Winter comes, and singing ends; when darkness falls at last;<br>
+When broken is the barren bough, and light and labour past;<br>
+I'll look for thee, and wait for thee, until we meet again:<br>
+Together we will take the road beneath the bitter rain!<br>
+	      <em>Both:</em><br>
+Together we will take the road that leads into the West,<br>
+And far away will find a land where both our hearts may rest.
+      </p>
+      <h2 id="Gandalf">Lament for Gandalf</h2>
+      <p>
+When evening in the Shire was grey<br>
+his footsteps on the Hill were heard;<br>
+before the dawn he went away<br>
+on journey long without a word.<br>
+<br>
+From Wilderland to Western shore,<br>
+from northern waste to southern hill,<br>
+through dragon-lair and hidden door<br>
+and darkling woods he walked at will.<br>
+<br>
+With Dwarf and Hobbit, Elves and Men,<br>
+with mortal and immortal folk,<br>
+with bird on bough and beast in den,<br>
+in their own secret tongues he spoke.<br>
+<br>
+A deadly sword, a healing hand,<br>
+a back that bent beneath its load;<br>
+a trumpet-voice, a burning brand,<br>
+a weary pilgrim on the road.<br>
+<br>
+A lord of wisdom throned he sat,<br>
+swift in anger, quick to laugh;<br>
+an old man in a battered hat<br>
+who leaned upon a thorny staff.<br>
+<br>
+He stood upon the bridge alone<br>
+and Fire and Shadow both defied;<br>
+his staff was broken on the stone,<br>
+in Khazad-dûm his wisdom died.
+      </p>
+			<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br>Poems and songs written by J.R.R. Tolkien
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Songs!-->
+    <section class="mdl-layout__tab-panel" id="Maps"><!--Maps!-->
+      <div class="page-content">
+			<p>Maps on this page from <a href="http://www.isbnsearch.org/isbn/0618002219" target="_blank"><i>The Hobbit</i></a> and <a href="http://www.isbnsearch.org/isbn/0618129014" target="_blank"><i>The Lord of the Rings</i></a> are protected by "fair use" under <a href="https://www.law.cornell.edu/uscode/text/17/107" target="_blank">Title 17 § 107</a> of the United States Code.</p>
+	    <h2>The Hobbit</h2>
+	    <h3>The Wilderland</h3>
+	    <a href="http://imgur.com/iMX16Oo.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/iMX16Oo.jpg" alt="The Wilderland" width="100%" height="auto"></a>
+	    <h3>Thror's Map</h3>
+	    <a href="http://imgur.com/hvQ2EDx.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/hvQ2EDx.jpg" alt="Thror's Map" width="100%" height="auto"></a>
+	    <h2>Lord of the Rings</h2>
+	    <h3>Middle-Earth</h3>
+	    <a href="http://imgur.com/nPOtnBd.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/nPOtnBd.jpg" alt="Middle-Earth" width="100%" height="auto"></a>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br>Images hosted on <a href="https://imgur.com/" target="_blank">Imgur</a>
+						<br>Maps from The Hobbit and Lord of the Rings by J.R.R. Tolkien
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Maps!-->
+		<section class="mdl-layout__tab-panel" id="Fonts"><!--Fonts!-->
+      <div class="page-content">
+			<a href="dwarvishregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="dwarvishFont">
+					<i class="dwarvishfont">D</i><i class="material-icons">file_download</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="dwarvishFont">
+					Download Dwarvish font
+				</div>
+				<a href="tengwarfeanorregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab2" id="elvishFont">
+					<i class="elvishfont">D</i><i class="material-icons">file_download</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="elvishFont">
+					Download Elvish font
+				</div>
+			<h2>Download <a href="dwarvishregular.ttf">Dwarvish</a> and/or <a href="tengwarfeanorregular.ttf">Elvish</a> TTF fonts</h2>
+			<h3>Installation Instructions:</h3>	   
+        <h4>Windows:</h4>
+        <ol>
+          <li>Right-click the downloaded font file</li>
+          <li>Select “Install”</li>
+        </ol>
+        <h4>Mac OS:</h4>
+        <ol>
+          <li>Double-click the downloaded font file to preview it</li>
+          <li>Click Install Font in the preview window to install it</li>
+        </ol>
+        <h4>Linux:</h4>
+        <p>Note: different Linux distributions come with different desktop environments, and those different desktop environments contain different applications for this.</p>
+        <ol>
+          <li>Double-click the downloaded font file to preview it</li>
+          <li>On Ubuntu or other GNOME-based distributions, GNOME Font Viewer will open</li>
+          <li>Click the Install button to install the font for your user account</li>
+        </ol>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br>Fonts created with <a href="https://birdfont.org/" target="_blank">Birdfont</a>, a free font editor by Johan Mattsson
+						<br>Elvish glyphs originally from <a href="http://www.dafont.com/tengwar-annatar.font" target="_blank">Tengwar Annatar</a> by Johan Winge
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Fonts!-->
+		<section class="mdl-layout__tab-panel" id="Apps"><!--Apps!-->
+      <div class="page-content">
+			<a href="https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing" target="_blank" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="windowsApp">
+					<i class="material-icons">desktop_windows</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="windowsApp">
+					Download free Windows app
+				</div>
+				<a href="https://drive.google.com/file/d/0B_psIC-BvyqBQWpQRksxSjQxd0U/view?usp=sharing" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab2" target="_blank" id="androidApp">
+					<i class="material-icons">android</i>
+				</a>
+				<div class="mdl-tooltip mdl-tooltip--left" for="androidApp">
+					Download free Android app
+				</div>
+			<h2>Download the free Tengwar Transcriber Apps for <a href="#WindowsApp">Windows</a> and <a href="#AndroidApp">Android</a></h2>
+      <h3 id="WindowsApp">Windows App</h3>
+			<a id="windowsLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing" target="_blank">Download</a>
+			<div class="mdl-tooltip" for="windowsLink">
+					Download file hosted<br>on Google Drive
+			</div>
+			<h4>Features:</h4>
+      <ul>
+        <li>Elvish Transcriber</li>
+        <li>Dwarvish Transcriber</li>
+        <li>Articles on Elvish and Dwarvish</li>
+        <li>Middle-Earth Maps (including save to file system)</li>
+        <li>Save transcription as image</li>
+        <li>Works offline</li>
+        <li>Portable installation (no installers)</li>
+        <li>Automated Font Install</li>
+        <li>Persistent transcription: your transcription is still there after you close the app</li>
+      </ul>
+      <h4>Installation Instructions:</h4>
+      <ol>
+        <li>Download zip file (links above and at bottom right)</li>
+        <li>Unzip the downloaded file</li>
+        <li>Launch "Tengwar Transcriber.exe"</li>
+        <li>You can put "Tengwar Transcriber.exe" (the application) and "Tengwartranscriber.exe.config" (the application settings) anywhere, as long as they are both in the same directory</li>
+        <li>You can create a shortcut to the file if you want (right-click file, click Create Shortcut)</li>
+      </ol>
+      
+      <h3 id="AndroidApp">Android App (Beta)</h3>
+			<a id="androidLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="https://drive.google.com/file/d/0B_psIC-BvyqBQWpQRksxSjQxd0U/view?usp=sharing" target="_blank">Download</a>
+			<div class="mdl-tooltip" for="androidLink">
+					Download file hosted<br>on Google Drive
+			</div>
+			<h4>Screenshots</h4>
+			<a href="images/ElvishTranscriber.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/ElvishTranscriber.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/DwarvishTranscriber.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/DwarvishTranscriber.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/AboutElvish.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/AboutElvish.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/AboutDwarvish.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/AboutDwarvish.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/Website.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/Website.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/SaveImage.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/SaveImage.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/SavedImage.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/SavedImage.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/AboutScreen.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/AboutScreen.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+				<a href="images/Keyboard.png" target="_blank" class="demo-card-image mdl-card mdl-shadow--2dp imagecard" style="background-image: url('images/Keyboard.png');">
+				<div class="mdl-card__title mdl-card--expand"></div>
+				</a>
+      <h4>Features:</h4>
+      <ul>
+        <li>Elvish Transcriber</li>
+        <li>Dwarvish Transcriber</li>
+        <li>Articles on Elvish and Dwarvish</li>
+        <li>Save transcription as image</li>
+        <li>Works offline</li>
+        <li>Persistent transcription: your transcription is still there after you close the app</li>
+      </ul>
+      <h4>Installation Instructions:</h4>
+      <ol>
+        <li>Download apk file (links above and at bottom right)</li>
+        <li>Transfer the file to your Android device</li>
+        <li>Go to Settings&gt;Developer on your Android device and allow installation of apps from unauthenticated sources</li>
+        <li>Find the apk file on your phone and launch it</li>
+        <li>The application should now be installed!</li>
+      </ol>
+			<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br>Android App created with <a href="https://thunkable.com/" target="_blank">Thunkable</a>
+						<br>Windows App created with <a href="https://www.visualstudio.com/" target="_blank">Visual Studio 2017</a>
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Apps!-->
+		<section class="mdl-layout__tab-panel" id="Feedback"><!--Feedback!-->
+      <div class="page-content">
+			<h2>Submit Feedback Below</h2>
+      <form action="https://formspree.io/maximiliandavy@gmail.com" method="POST">
+				<div class="mdl-textfield mdl-js-textfield">
+					<input class="mdl-textfield__input" type="text" name="Name" id="NameInput">
+					<label class="mdl-textfield__label" for="sample1">Name</label>
+					<div class="mdl-tooltip" for="NameInput">
+						Your name
+					</div>
+				</div>
+				<div class="mdl-textfield mdl-js-textfield">
+					<input class="mdl-textfield__input" type="email" name="email" id="EmailInput">
+					<label class="mdl-textfield__label" for="sample1">Email*</label>
+					<div class="mdl-tooltip" for="EmailInput">
+						Your valid email address (required)
+					</div>
+				</div>
+				<a id="FeedbackType">Feedback Type*</a><br>
+				<div class="mdl-tooltip" for="FeedbackType">
+					Feedback Type (required)
+				</div>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio01">
+					<input type="radio" id="radio01" class="mdl-radio__button" name="Type" value="Suggestion">
+					<span class="mdl-radio__label">Suggestion</span>
+				</label>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio02">
+					<input type="radio" id="radio02" class="mdl-radio__button" name="Type" value="Help">
+					<span class="mdl-radio__label">Help Request</span>
+				</label>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio03">
+					<input type="radio" id="radio03" class="mdl-radio__button" name="Type" value="Bug">
+					<span class="mdl-radio__label">Bug Report</span>
+				</label>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio04">
+					<input type="radio" id="radio04" class="mdl-radio__button" name="Type" value="Comment" checked>
+					<span class="mdl-radio__label">Comment</span>
+				</label>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio05">
+					<input type="radio" id="radio05" class="mdl-radio__button" name="Type" value="Other">
+					<span class="mdl-radio__label">Other</span>
+				</label>
+    	  <br><a id="OperatingSystem">Operating System*</a><br>
+				<div class="mdl-tooltip" for="OperatingSystem">
+					Your operating system (required)
+				</div>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio06">
+					<input type="radio" id="radio06" class="mdl-radio__button" name="OS" value="Windows" checked>
+					<span class="mdl-radio__label">Windows</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio07">
+					<input type="radio" id="radio07" class="mdl-radio__button" name="OS" value="Mac">
+					<span class="mdl-radio__label">Mac OS</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio08">
+					<input type="radio" id="radio08" class="mdl-radio__button" name="OS" value="Android">
+					<span class="mdl-radio__label">Android</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio09">
+					<input type="radio" id="radio09" class="mdl-radio__button" name="OS" value="iOS">
+					<span class="mdl-radio__label">iOS</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio10">
+					<input type="radio" id="radio10" class="mdl-radio__button" name="OS" value="Linux">
+					<span class="mdl-radio__label">Windows</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio11">
+					<input type="radio" id="radio11" class="mdl-radio__button" name="OS" value="Other">
+					<span class="mdl-radio__label">Other</span>
+				</label>
+        <br><a id="Browser">Browser*</a><br>
+				<div class="mdl-tooltip" for="Browser">
+					Your browser (required)
+				</div>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio12">
+					<input type="radio" id="radio12" class="mdl-radio__button" name="Browser" value="Chrome" checked>
+					<span class="mdl-radio__label">Google Chrome</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio13">
+					<input type="radio" id="radio13" class="mdl-radio__button" name="Browser" value="Firefox">
+					<span class="mdl-radio__label">Mozilla Firefox</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio14">
+					<input type="radio" id="radio14" class="mdl-radio__button" name="Browser" value="Safari">
+					<span class="mdl-radio__label">Safari</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio15">
+					<input type="radio" id="radio15" class="mdl-radio__button" name="Browser" value="Explorer">
+					<span class="mdl-radio__label">Internet Explorer</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio16">
+					<input type="radio" id="radio16" class="mdl-radio__button" name="Browser" value="Edge">
+					<span class="mdl-radio__label">Microsoft Edge</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio17">
+					<input type="radio" id="radio17" class="mdl-radio__button" name="Browser" value="Opera">
+					<span class="mdl-radio__label">Opera</span>
+				</label>
+        <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio18">
+					<input type="radio" id="radio18" class="mdl-radio__button" name="Browser" value="Windows App">
+					<span class="mdl-radio__label">Windows App</span>
+				</label>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio19">
+					<input type="radio" id="radio19" class="mdl-radio__button" name="Browser" value="Android App">
+					<span class="mdl-radio__label">Android App</span>
+				</label>
+				<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="radio20">
+					<input type="radio" id="radio20" class="mdl-radio__button" name="Browser" value="Other">
+					<span class="mdl-radio__label">Other</span>
+				</label>
+        <br><a id="MessageLabel">Message*</a><br>
+				<div class="mdl-tooltip" for="MessageLabel">
+					Your message (required)
+				</div>
+				<div class="mdl-textfield mdl-js-textfield field">
+					<textarea class="mdl-textfield__input" type="text" rows= "3" id="Message" name="Message"></textarea>
+					<label class="mdl-textfield__label" for="Message">Enter your message</label>
+					<div class="mdl-tooltip" for="Message">
+						Enter your message<br>here (required)
+					</div>
+				</div>
+        <input type="hidden" name="_next" value="//tengwartranscriber.github.io/feedback.html?alert=1">    
+        <input type="hidden" name="_subject" value="Feedback from Tengwar Transcriber">
+				<input type="submit" value="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+    </form>
+				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
+					<div class="mdl-card__title">
+						<h2 class="mdl-card__title-text">Credits</h2>
+					</div>
+					<div class="mdl-card__supporting-text">
+						Page created and maintained by <a href="https://github.com/MEDavy" target="_blank">MEDavy</a>
+						<br>Site theme created with <a href="https://getmdl.io/" target="_blank">Material Design Lite</a>
+						<br>Site hosted on <a href="https://pages.github.com" target="_blank">Github Pages</a>
+						<br>Feedback form created with <a href="https://formspree.io/" target="_blank">Formspree</a>
+					</div>
+					<div class="mdl-card__actions mdl-card--border">
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+					</div>
+				</div><!--end footer!-->
+			</div>
+    </section><!--End Feedback!-->
+  </main>
+</div>
+  </body>
+</html>
