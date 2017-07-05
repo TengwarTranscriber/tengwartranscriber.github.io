@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+  xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
+  xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://tengwartranscriber.github.io/</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/index.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/dwarvish.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/abouttengwar.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/aboutdwarvish.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/welshpronunciation.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/songs.html</loc>
+    <video:video>
+      <video:content_loc>
+        https://r2---sn-n3tcx5h-bwue.googlevideo.com/videoplayback?itag=22&amp;signature=5B06DDFF78263D79FA2FB1F1141958A2C1F7C7EB.9C0A503FC8D794FE0E9E5430447B3FD70935F71A&amp;mime=video%2Fmp4&amp;key=yt6&amp;ei=X-UUWYDLMJDLuAKKxpH4BA&amp;lmt=1492088779626057&amp;source=youtube&amp;upn=uMXR_hT6OiI&amp;initcwndbps=497500&amp;id=o-AKYcHF1XBlKZFC0wS1bQvMhePIuxyk04-PXeYaDReUgR&amp;pl=20&amp;mm=31&amp;mn=sn-n3tcx5h-bwue&amp;ms=au&amp;mt=1494541584&amp;mv=m&amp;sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cupn%2Cexpire&amp;ip=72.42.111.20&amp;requiressl=yes&amp;ratebypass=yes&amp;expire=1494563263&amp;ipbits=0&amp;dur=311.472
+      </video:content_loc>
+      <video:title>Song of Durin (Complete Edition) - Clamavi de Profundis</video:title>  
+      <video:description>
+        An excellent arrangement by Clamavi De Profundis.
+      </video:description>
+    </video:video>
+    <video:video>
+      <video:content_loc>
+        https://r2---sn-n3tcx5h-bwue.googlevideo.com/videoplayback?itag=22&amp;key=yt6&amp;signature=8E8711C9752ED77BEA85EF1CA0919FD7F0237706.B78C7D0CF765A845BE5ABB28BAE624A1961E9AAA&amp;ipbits=0&amp;pl=20&amp;expire=1494563416&amp;dur=1209.480&amp;ratebypass=yes&amp;initcwndbps=480000&amp;upn=L_Io_zmD3EE&amp;ei=-OUUWd3kKc3VugLq04ewAw&amp;id=o-AGebPmdPxQZ26cg8ZT7ZG7rgb7Rel742JVVsc3Q8idwa&amp;lmt=1472775156351220&amp;ip=72.42.111.20&amp;sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cupn%2Cexpire&amp;mv=m&amp;mt=1494541699&amp;ms=au&amp;source=youtube&amp;mime=video%2Fmp4&amp;requiressl=yes&amp;mn=sn-n3tcx5h-bwue&amp;mm=31
+      </video:content_loc>
+      <video:title>Song of the Lonely Mountain (Complete Edition) - Clamavi de Profundis</video:title>  
+      <video:description>
+        Another excellent arrangement by Clamavi De Profundis. Note that the first and last verses of Song of Durin are inserted after verse 9.
+      </video:description>
+    </video:video>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/maps.html</loc>
+    <image:image>
+       <image:loc>https://imgur.com/iMX16Oo.jpg</image:loc>
+       <image:caption>The Wilderland Map (The Hobbit)</image:caption>
+    </image:image>
+    <image:image>
+       <image:loc>http://imgur.com/hvQ2EDx.jpg</image:loc>
+       <image:caption>Thror's Map (The Hobbit)</image:caption>
+    </image:image>
+    <image:image>
+       <image:loc>http://imgur.com/nPOtnBd.jpg</image:loc>
+       <image:caption>Middle-Earth Map (The Lord of the Rings)</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/app.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/more.html?font=elvish</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/more.html?font=dwarvish</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/sideways.html</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/feedback.html</loc>
+  </url>
+</urlset>
