@@ -1,5 +1,11 @@
 {
-  "name": "Tengwar Feanor Elvish Transcriber",
+  "name": "Tengwar Feanor Elvish Transcriber",,
+  "start_url": "index.html/#ElvishTranscriber",
+  "display": "standalone"
+  "short_name": "Tengwar Feanor",
+  "background_color": "#ffffff",
+  "theme_color": "#607d8b",
+  "description": "Easy tool for transcribing to Elvish and Dwarvish, maps and songs from Tolkien's works, Elvish and Dwarvish font downloads, history of the languages, and more. Free apps for Windows and Android.",
   "icons": [
     {
       "src": "32x32.png",
@@ -37,7 +43,5 @@
       "type": "image/png",
       "density": 4.0
     }
-  ],
-  "start_url": "index.html/#ElvishTranscriber",
-  "display": "standalone"
+  ]
 }
