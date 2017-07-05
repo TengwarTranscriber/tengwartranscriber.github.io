@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <title>Tengwar Feanor Elvish Transcriber</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue_grey-light_blue.min.css" />
-    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
-		<script type="text/javascript" src="html2canvas.js"></script>
+		<link rel="stylesheet" href="./material.min.css">
+		<script defer src="./material.min.js"></script>
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<script defer type="text/javascript" src="./html2canvas.js"></script>
     <style>
 			@font-face {
 			  font-family: 'Tengwar Feanor Regular';
@@ -17,11 +17,6 @@
 			@font-face {
 			  font-family: 'Dwarvish Regular';
 			  src: url('dwarvishregular.ttf') format('truetype');
-			}
-			
-			.page-content {
-				padding-left: 4rem;
-				padding-right: 4rem;
 			}
 			
 			.demo-card-wide {
@@ -67,24 +62,57 @@
 				background-position: center;
 				background-repeat: no-repeat;
 				background-size:contain;
-				margin: 2rem;
 				display: inline-block;
+				height: auto;
+			}
+			
+			@media only screen and (max-width: 800px) {
+				.imagecard {
+					margin: .5rem;
+					width: calc(100% - 1rem);
+				}
+				.page-content {
+					padding-left: 1rem;
+					padding-right: 1rem;
+				}
+			}
+			
+			@media only screen and (min-width: 800px) {
+				.imagecard {
+					margin: 1rem;
+					width: calc(50% - 4rem);
+				}
+				.page-content {
+					padding-left: 4rem;
+					padding-right: 4rem;
+				}
 			}
 			
 			.inline {
 				display: inline-block;
 			}
+			
+			canvas {
+				max-width: 90%;
+				max-height: 90%;
+			}
 		</style>
 		<script language="JavaScript">
 			function onLoad(){
-				var ElvishInput = document.getElementById('ElvishInput');
-				var ElvishOutput = document.getElementById('ElvishOutput');
-				var DwarvishInput = document.getElementById('DwarvishInput');
-				var DwarvishOutput = document.getElementById('DwarvishOutput');
-				ElvishInput.value = getCookie('text');
-				transcribeElvish();
-				DwarvishInput.value = getCookie('text');
-				transcribeDwarvish();
+				storageEnabled = 0;
+				ElvishInput = document.getElementById('ElvishInput');
+				ElvishOutput = document.getElementById('ElvishOutput');
+				DwarvishInput = document.getElementById('DwarvishInput');
+				DwarvishOutput = document.getElementById('DwarvishOutput');
+				if (typeof(Storage) !== "undefined") {
+					storageEnabled = 1;
+				}
+				if (storageEnabled == 1 && localStorage.text) {
+					ElvishInput.value = localStorage.text;
+					transcribeElvish();
+					DwarvishInput.value = localStorage.text;
+					transcribeDwarvish();
+				}
 				var browserWarning = document.getElementById('browserWarning');
 				var isChromium = window.chrome,
 				       vendorName = window.navigator.vendor,
@@ -99,99 +127,109 @@
 					browserWarning.style.display = 'block';
 				}
 				if (getURLParameter('alert') == 1){
-				document.getElementById('thankyou').style.display = "block";
+					document.getElementById('thankyou').style.display = "block";
 				}
 				getHash();
 			}
 			
 			function saveElvishImage() {
-				document.getElementById('elvishSpinner').style.display = "block";
-				document.getElementById('saveElvish').innerHTML = "Saving...";
-				document.getElementById('saveElvish').disabled = "true";
-				html2canvas(ElvishOutput, {
-					onrendered: function(canvas) {
+				document.getElementById('elvishSpinner').style.display = "block";//show the spinner
+				document.getElementById('saveElvish').innerHTML = "Saving...";//change button text
+				document.getElementById('saveElvish').disabled = "true";//disable button
+				html2canvas(ElvishOutput, {//create canvas from output
+					onrendered: function(canvas) {//when canvas is created
 						// canvas is the final rendered <canvas> element
-						var div = document.createElement("div");
-						div.style.cssText = "background-color: black;opacity: .5;position: fixed;left: 0;right: 0;z-index: 10;width: 100%;height: 100%;color:white;";
-						canvas.style.cssText = "background-color:white; z-index:12; position:fixed; top: 50%; left:50%; transform:translate(-50%, -50%);";
-						canvas.id = "canvas";
-						div.id = "div";
-						div.innerHTML = "Right click (desktop) or long press (mobile) image to download.<br>Click/tap anywhere to dismiss.";
-						canvas.onclick=function(){
-							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
-							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						var div = document.createElement("div");//create div
+						div.style.cssText = "background-color: black;opacity: .5;position: fixed;left: 0;right: 0;z-index: 10;width: 100%;height: 100%;color:white;";//set to translucent and fill screen
+						canvas.style.cssText = "background-color:white; z-index:12; position:fixed; top: 50%; left:50%; transform:translate(-50%, -50%);";//set canvas to float center
+						canvas.id = "canvas";//set id for canvas
+						div.id = "div";//and div
+						div.innerHTML = "Right click (desktop) or long press (mobile) image to download.<br>Click/tap anywhere to dismiss.";//create prompt on div
+						canvas.onclick=function(){//when canvas clicked
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));//hide canvas
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));//and div
 						}
-						div.onclick=function(){
-							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
-							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						div.onclick=function(){//when div clicked
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));//hide canvas 
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));//and div
 						}
-						document.body.appendChild(canvas);
-						document.body.appendChild(div);
-						document.getElementById("elvishSpinner").style.display = "none";
-						document.getElementById('saveElvish').innerHTML = "Save as Image";
-						document.getElementById('saveElvish').disabled = "";
+						document.body.appendChild(canvas);//add canvas
+						document.body.appendChild(div);//and div to document
+						document.getElementById("elvishSpinner").style.display = "none";//hide spinner
+						document.getElementById('saveElvish').innerHTML = "Save as Image";//change text
+						document.getElementById('saveElvish').disabled = "";//and reenable button
 					}
 				});
 			}
 			
 			function saveDwarvishImage() {
-				document.getElementById("dwarvishSpinner").style.display = "block";
-				document.getElementById('saveDwarvish').innerHTML = "Saving...";
-				document.getElementById('saveDwarvish').disabled = "true";
-				html2canvas(DwarvishOutput, {
-					onrendered: function(canvas) {
+				document.getElementById("dwarvishSpinner").style.display = "block";//show the spinner
+				document.getElementById('saveDwarvish').innerHTML = "Saving...";//change the button text
+				document.getElementById('saveDwarvish').disabled = "true";//disable the button
+				html2canvas(DwarvishOutput, {//create a canvas from the output textbox
+					onrendered: function(canvas) {//when the canvas is created
 						// canvas is the final rendered <canvas> element
-						var div = document.createElement("div");
-						div.style.cssText = "background-color: black;opacity: .5;position: fixed;left: 0;right: 0;z-index: 10;width: 100%;height: 100%;color:white;";
-						canvas.style.cssText = "background-color:white; z-index:12; position:fixed; top: 50%; left:50%; transform:translate(-50%, -50%);";
-						canvas.id = "canvas";
-						div.id = "div";
-						div.innerHTML = "Right click (desktop) or long press (mobile) image to download.<br>Click/tap anywhere to dismiss.";
-						canvas.onclick=function(){
-							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
-							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						var div = document.createElement("div");//create a div
+						div.style.cssText = "background-color: black;opacity: .5;position: fixed;left: 0;right: 0;z-index: 10;width: 100%;height: 100%;color:white;";//set the div to be translucent and cover the screen
+						canvas.style.cssText = "background-color:white; z-index:12; position:fixed; top: 50%; left:50%; transform:translate(-50%, -50%);";//set the canvas to float in the middle
+						canvas.id = "canvas";//set the ids for the canvas
+						div.id = "div";//and div
+						div.innerHTML = "Right click (desktop) or long press (mobile) image to download.<br>Click/tap anywhere to dismiss.";//create prompt on the div
+						canvas.onclick=function(){//when the canvas is clicked
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));//delete the canvas
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));//and the div
 						}
-						div.onclick=function(){
-							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));
-							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));
+						div.onclick=function(){//when the div is clicked
+							document.getElementById('canvas').parentNode.removeChild(document.getElementById('canvas'));//delete the canvas
+							document.getElementById('div').parentNode.removeChild(document.getElementById('div'));//and the div
 						}
-						document.body.appendChild(canvas);
-						document.body.appendChild(div);
-						document.getElementById("dwarvishSpinner").style.display = "none";
-						document.getElementById('saveDwarvish').innerHTML = "Save as Image";
-						document.getElementById('saveDwarvish').disabled = "";
+						document.body.appendChild(canvas);//add the canvas
+						document.body.appendChild(div);//and the div to the page
+						document.getElementById("dwarvishSpinner").style.display = "none";//hide the spinner
+						document.getElementById('saveDwarvish').innerHTML = "Save as Image";//change the button text
+						document.getElementById('saveDwarvish').disabled = "";//and reenable the button
 					}
 				});
 			}
 				
 			function transcribeElvish() {
-				ElvishOutput.value = " " + ElvishInput.value;
-        ElvishOutput.value = ElvishOutput.value.replace(/\n/g, '\n ').replace(/ a/g, " A").replace(/ e/g, " E").replace(/ i/g, " I").replace(/ o/g, " O").replace(/ u/g, " U").replace(/aa/g, "aA").replace(/ae/g, "aE").replace(/ai/g, "aI").replace(/ao/g, "aO").replace(/au/g, "aU").replace(/ea/g, "eA").replace(/ee/g, "eE").replace(/ei/g, "eI").replace(/eo/g, "eO").replace(/eu/g, "eU").replace(/ia/g, "iA").replace(/ie/g, "iE").replace(/ii/g, "iI").replace(/io/g, "iO").replace(/iu/g, "iU").replace(/oa/g, "oA").replace(/oe/g, "oE").replace(/oi/g, "oI").replace(/oo/g, "eO").replace(/ou/g, "oU").replace(/ua/g, "uA").replace(/ue/g, "uE").replace(/ui/g, "uI").replace(/uo/g, "uO").replace(/uu/g, "uU").replace(/ck/g, "c").replace(/Aa/g, "AA").replace(/Ae/g, "AE").replace(/Ai/g, "AI").replace(/Ao/g, "AO").replace(/Au/g, "AU").replace(/Ea/g, "EA").replace(/Ee/g, "EE").replace(/Ei/g, "EI").replace(/Eo/g, "EO").replace(/Eu/g, "EU").replace(/Ia/g, "IA").replace(/Ie/g, "IE").replace(/Ii/g, "II").replace(/Io/g, "IO").replace(/Iu/g, "IU").replace(/Oa/g, "OA").replace(/Oe/g, "OE").replace(/Oi/g, "OI").replace(/Oo/g, "OO").replace(/Ou/g, "OU").replace(/Ua/g, "UA").replace(/Ue/g, "UE").replace(/Ui/g, "UI").replace(/Uo/g, "UO").replace(/Uu/g, "UU");
-				if (ElvishInput.value !== "") {
-					document.getElementById("elvishLabel").style.display = 'none';
+				ElvishOutput.value = " " + ElvishInput.value;//set the output to the input
+        ElvishOutput.value = ElvishOutput.value.replace(/\n/g, '\n ').replace(/ a/g, " A").replace(/ e/g, " E").replace(/ i/g, " I").replace(/ o/g, " O").replace(/ u/g, " U").replace(/aa/g, "aA").replace(/ae/g, "aE").replace(/ai/g, "aI").replace(/ao/g, "aO").replace(/au/g, "aU").replace(/ea/g, "eA").replace(/ee/g, "eE").replace(/ei/g, "eI").replace(/eo/g, "eO").replace(/eu/g, "eU").replace(/ia/g, "iA").replace(/ie/g, "iE").replace(/ii/g, "iI").replace(/io/g, "iO").replace(/iu/g, "iU").replace(/oa/g, "oA").replace(/oe/g, "oE").replace(/oi/g, "oI").replace(/oo/g, "eO").replace(/ou/g, "oU").replace(/ua/g, "uA").replace(/ue/g, "uE").replace(/ui/g, "uI").replace(/uo/g, "uO").replace(/uu/g, "uU").replace(/ck/g, "c").replace(/Aa/g, "AA").replace(/Ae/g, "AE").replace(/Ai/g, "AI").replace(/Ao/g, "AO").replace(/Au/g, "AU").replace(/Ea/g, "EA").replace(/Ee/g, "EE").replace(/Ei/g, "EI").replace(/Eo/g, "EO").replace(/Eu/g, "EU").replace(/Ia/g, "IA").replace(/Ie/g, "IE").replace(/Ii/g, "II").replace(/Io/g, "IO").replace(/Iu/g, "IU").replace(/Oa/g, "OA").replace(/Oe/g, "OE").replace(/Oi/g, "OI").replace(/Oo/g, "OO").replace(/Ou/g, "OU").replace(/Ua/g, "UA").replace(/Ue/g, "UE").replace(/Ui/g, "UI").replace(/Uo/g, "UO").replace(/Uu/g, "UU");//replace according to rules
+				if (ElvishInput.value !== "") {//if the output has content
+					document.getElementById("elvishLabel").style.display = 'none';//hide the prompt
 				}else {
-					document.getElementById("elvishLabel").style.display = 'block';
+					document.getElementById("elvishLabel").style.display = 'block';//otherwise show the prompt
 				}
-				setCookie('text', ElvishInput.value, 365);
+				if (storageEnabled == 1) {
+					localStorage.text = ElvishInput.value;
+				}
       }
 			
 			function transcribeDwarvish() {
-				DwarvishOutput.value = DwarvishInput.value;
-				if (DwarvishInput.value !== "") {
-					document.getElementById("dwarvishLabel").style.display = 'none';
+				DwarvishOutput.value = DwarvishInput.value;//set the output to the input
+				if (DwarvishInput.value !== "") {//if the output has content
+					document.getElementById("dwarvishLabel").style.display = 'none';//hide the prompt
 				}else {
-					document.getElementById("dwarvishLabel").style.display = 'block';
+					document.getElementById("dwarvishLabel").style.display = 'block';//otherwise show the prompt
 				}
-				setCookie('text', DwarvishInput.value, 360);
+				if (storageEnabled == 1) {
+					localStorage.text = DwarvishInput.value;
+				}
 			}
 			
 			function getHash() {
-				if(window.location.hash) {
-					if(document.getElementById(window.location.hash.split("?")[0].replace('#',''))){
-						switchToTab(window.location.hash.split("?")[0].replace('#',''));
+				if(window.location.hash) {//if the url contains a hash
+					if(document.getElementById(window.location.hash.split("?")[0].replace('#','')).className.includes('tab-panel')){//if the element whose id equals the hash is a tab-panel
+						switchToTab(window.location.hash.split("?")[0].replace('#',''));//switch to it
+					} else if (document.getElementById(window.location.hash.split("?")[0].replace('#','')).parentNode.parentNode.parentNode.className.includes('tab-panel')){//if the parent element of the element who's id equals the hash is inside a tab panel
+						switchToTab(document.getElementById(window.location.hash.split("?")[0].replace('#','')).parentNode.parentNode.parentNode.id);//switch to that tab panel
+					} else if (document.getElementById(window.location.hash.split("?")[0].replace('#','')).parentNode.parentNode.className.includes('tab-panel')){//if the element who's id equals the hash is inside a tab panel
+						switchToTab(document.getElementById(window.location.hash.split("?")[0].replace('#','')).parentNode.parentNode.id);//switch to that tab panel
+					} else {
+						switchToTab("ElvishTranscriber");//otherwise go to the default page
 					}
 				} else {
-					// Fragment doesn't exist
+					// the url contains no hash so do nothing
 				}
 			}
 			
@@ -200,26 +238,35 @@
 			}
 			
 			function switchToTab(tab) {
-				var els = document.getElementsByClassName("mdl-layout__tab");
+				var els = document.getElementsByClassName("mdl-layout__tab");//create a list of tabs
 
-				for (var i = 0, l = els.length; i < l; i++) {
+				for (var i = 0, l = els.length; i < l; i++) {//loop through the tabs
 					var el = els[i];
-					if (el.href.includes(tab)){
-						el.className = "mdl-layout__tab is-active";
+					if (el.href.includes(tab)){//if the tab links to the tab we want to switch to
+						el.className = "mdl-layout__tab is-active"//make it active
 					} else{
-						el.className = "mdl-layout__tab";
+						el.className = "mdl-layout__tab";//otherwise reset it to inactive
 					}
 				}
-				var els = document.getElementsByClassName("mdl-layout__tab-panel");
-				for (var i = 0, l = els.length; i < l; i++) {
+				var els = document.getElementsByClassName("mdl-layout__tab-panel");//create a list of tab panels
+				for (var i = 0, l = els.length; i < l; i++) {//loop through the tab panels
 					var el = els[i];
-					if (el.id == tab){
-						el.className = "mdl-layout__tab-panel is-active";
+					if (el.id == tab){//if the tab is the one we want to switch to
+						el.className = "mdl-layout__tab-panel is-active";//make it active
 					} else{
-						el.className = "mdl-layout__tab-panel";
+						el.className = "mdl-layout__tab-panel";//otherwise reset it to inactive
 					}
 				}
-				window.location.hash = '#'+tab;
+				window.location.hash = '#'+tab;//set the hash to the tab we are on (so we can come back to it on reload)
+				if (tab == "ElvishTranscriber" && storageEnabled ==1) {
+						 ElvishInput.value = localStorage.text;
+						 transcribeElvish();
+				}
+				if (tab == "DwarvishTranscriber" && storageEnabled ==1) {
+						 DwarvishInput.value = localStorage.text;
+						 transcribeDwarvish();
+				}
+				document.title = "Tengwar Feanor: "+ tab.replace(/([A-Z]+)/g, ' $1').trim();
 			}
 			
 			function setCookie(cname,cvalue,exdays) {
@@ -266,39 +313,39 @@
     </div>
     <!-- Tabs -->
     <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-      <a id="mnu1" href="#ElvishTranscriber" onclick="setHash('ElvishTranscriber')" class="mdl-layout__tab is-active">Elvish Transcriber</a>
+      <a id="mnu1" href="#ElvishTranscriber" onclick="switchToTab('ElvishTranscriber')" class="mdl-layout__tab is-active">Elvish Transcriber</a>
 			<div class="mdl-tooltip" for="mnu1">
 				Transcribe Latin characters<br>to Elvish characters
 			</div>
-      <a id="mnu2" href="#DwarvishTranscriber" onclick="setHash('DwarvishTranscriber')" class="mdl-layout__tab">Dwarvish Transcriber</a>
+      <a id="mnu2" href="#DwarvishTranscriber" onclick="switchToTab('DwarvishTranscriber')" class="mdl-layout__tab">Dwarvish Transcriber</a>
 			<div class="mdl-tooltip" for="mnu2">
 				Transcribe Latin characters<br>to Dwarvish runes
 			</div>
-      <a id="mnu3" href="#AboutElvish" onclick="setHash('AboutElvish')" class="mdl-layout__tab">About Elvish</a>
+      <a id="mnu3" href="#AboutElvish" onclick="switchToTab('AboutElvish')" class="mdl-layout__tab">About Elvish</a>
 			<div class="mdl-tooltip" for="mnu3">
 				Learn about the Tengwar
 			</div>
-      <a id="mnu4" href="#AboutDwarvish" onclick="setHash('AboutDwarvish')" class="mdl-layout__tab">About Dwarvish</a>
+      <a id="mnu4" href="#AboutDwarvish" onclick="switchToTab('AboutDwarvish')" class="mdl-layout__tab">About Dwarvish</a>
 			<div class="mdl-tooltip" for="mnu4">
 				Learn about the Angerthas Erebor
 			</div>
-      <a id="mnu5" href="#Songs" onclick="setHash('Songs')" class="mdl-layout__tab">Songs</a>
+      <a id="mnu5" href="#Songs" onclick="switchToTab('Songs')" class="mdl-layout__tab">Songs</a>
 			<div class="mdl-tooltip" for="mnu5">
 				Songs and poems from<br>Tolkien's works
 			</div>
-      <a id="mnu6" href="#Maps" onclick="setHash('Maps')" class="mdl-layout__tab">Maps</a>
+      <a id="mnu6" href="#Maps" onclick="switchToTab('Maps')" class="mdl-layout__tab">Maps</a>
 			<div class="mdl-tooltip" for="mnu6">
 				Middle-Earth maps from<br>Lord of the Rings and the Hobbit
 			</div>
-			<a id="mnu7" href="#Fonts" onclick="setHash('Fonts')" class="mdl-layout__tab">Fonts</a>
+			<a id="mnu7" href="#Fonts" onclick="switchToTab('Fonts')" class="mdl-layout__tab">Fonts</a>
 			<div class="mdl-tooltip" for="mnu7">
 				Download the Elvish<br>and Dwarvish fonts
 			</div>
-			<a id="mnu8" href="#Apps" onclick="setHash('Apps')" class="mdl-layout__tab">Apps</a>
+			<a id="mnu8" href="#Apps" onclick="switchToTab('Apps')" class="mdl-layout__tab">Apps</a>
 			<div class="mdl-tooltip" for="mnu8">
 				Get the free Tengwar Feanor<br>apps for Windows and Android
 			</div>
-			<a id="mnu9" href="#Feedback" onclick="setHash('Feedback')" class="mdl-layout__tab">Feedback</a>
+			<a id="mnu9" href="#Feedback" onclick="switchToTab('Feedback')" class="mdl-layout__tab">Feedback</a>
 			<div class="mdl-tooltip" for="mnu9">
 				Give us feedback
 			</div>
@@ -324,6 +371,7 @@
 				</noscript>
     <section class="mdl-layout__tab-panel is-active" id="ElvishTranscriber"><!--Elvish Transcriber!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Elvish Transcriber</h1>
 			<!-- Colored FAB button with ripple -->
 				<a onclick="switchToTab('Fonts');" href="tengwarfeanorregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="elvishDownload">
 					<i class="material-icons">file_download</i>
@@ -395,6 +443,7 @@
     </section><!--End Elvish Transcriber!-->
     <section class="mdl-layout__tab-panel" id="DwarvishTranscriber"><!--Dwarvish Transcriber!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Dwarvish Transcriber</h1>
 			<a onclick="switchToTab('Fonts');" href="dwarvishregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="dwarvishDownload">
 					<i class="material-icons">file_download</i>
 				</a>
@@ -445,18 +494,35 @@ The runes of the dwarves were adopted by Tolkien from the Anglo-Saxon and Scandi
     </section><!--End Dwarvish Transcriber!-->
     <section class="mdl-layout__tab-panel" id="AboutElvish"><!--About Elvish!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">About Elvish</h1>
 			<a href="https://www.wikiwand.com/en/Tengwar" target="_blank" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="elvishArticle">
 					<i class="material-icons">open_in_new</i>
 				</a>
 				<div class="mdl-tooltip mdl-tooltip--left" for="elvishArticle">
 					Open Wikipedia Article
 				</div>
-				<h2><a id="Summary_0"></a>Summary</h2>
+				<p> </p>
+				<a href="#ElvishSummary" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Summary</span>
+			</a>
+			<a href="#ElvishHistory" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">History and Terminology</span>
+			</a>
+			<a href="#Linguistics" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Linguistics</span>
+			</a>
+			<a href="#Tehtar" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Tehtar</span>
+			</a>
+			<a href="#Modes" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Modes</span>
+			</a>
+				<h2><a id="ElvishSummary"></a>Summary</h2>
 <p>The Tengwar are an artificial script created by J. R. R. Tolkien. Within the fictional context of Tolkien’s legendarium, the tengwar were invented by the Elf Fëanor, and used first to write the Elven tongues Quenya and Telerin. Later a great number of languages of Middle-earth were written using the tengwar, including Sindarin.</p>
-<h2><a id="Fictional_History_and_Terminology_2"></a>Fictional History and Terminology</h2>
+<h2><a id="ElvishHistory"></a>History and Terminology</h2>
 <p>According to The War of the Jewels (Appendix D to Quendi and Eldar), Fëanor, when he created his script, introduced a change in terminology. He called a letter, i.e. a written representation of a spoken phoneme (tengwë) a tengwa. Previously, any letter or symbol had been called a sarat (from *sar “incise”). The alphabet of Rúmil of Valinor, on which Fëanor supposedly based his own work, was known as sarati. It later became known as “Tengwar of Rúmil”.<br>
 The plural of tengwa was tengwar, and this is the name by which Fëanor’s system became known. Since, however, in commonly used modes, an individual tengwa was equivalent to a consonant, the term tengwar in popular use became equivalent to “consonant sign”, and the vowel signs were known as ómatehtar. By loan-translation, the tengwar became known as tîw (singular têw) in Sindarin, when they were introduced to Beleriand. The letters of the earlier alphabet native to Sindarin were called cirth (singular certh, probably from *kirte “cutting”, and thus semantically analogous to Quenya sarat). This term was loaned into exilic Quenya as certa, plural certar.</p>
-<h2><a id="Complicated_Linguistic_Stuff_5"></a>Complicated Linguistic Stuff</h2>
+<h2><a id="Linguistics"></a>Linguistics</h2>
 <p>The most notable characteristic of the tengwar script is that the shapes of the letters correspond to the distinctive features of the sounds they represent. The Quenya consonant system has 5 places of articulation: labial, dental, palatal, velar, and glottal. The velars distinguish between plain and labialized (that is, articulated with rounded lips, or followed by a [w] sound). Each point of articulation, and the corresponding tengwa series, has a name in the classical Quenya mode. Dental sounds are called Tincotéma and are represented with the tengwar in column I. Labial sounds are called Parmatéma, and represented by the column II tengwar; velar sounds are called Calmatéma, represented by column III; and labialized velar sounds are called Quessetéma, represented by the tengwar of column IV. Palatal sounds are called Tyelpetéma and have no tengwa series of their own, but are represented by column III letters with an added diacritic for following [j].<br>
 Similarly shaped letters reflect not only similar places of articulation, but also similar manners of articulation. In the classical Quenya mode, row 1 represents voiceless stops, row 2 voiced prenasalized stops, row 3 voiceless fricatives, row 4 voiceless prenasalized stops, row 5 nasal stops, and row 6 approximants.</p>
 <p>Most letters are constructed by a combination of two basic shapes: a vertical stem (either long or short) and either one or two rounded bows (which may or may not be underscored, and may be on the left or right of the stem).<br>
@@ -469,10 +535,10 @@ In rows of the general use, there are the following correspondences between lett
 <li>Shortening it (so it is only the height of the bow) creates the corresponding nasal. In most modes, the signs with shortened stem and single bow do not correspond to the voiceless nasals, but to the approximants.</li>
 </ul>
 <p>In addition to these variations of the tengwar shapes, there is yet another variation, the use of stems that are extended both above and below the line. This shape may correspond to other consonant variations required. Except for some English abbreviations, it is not used in any of the better known tengwar modes, but it occurs in a Qenya mode where the tengwa Parma with extended stem is used for /pt/ and the tengwa Calma with extended stem is used for /kt/. The tengwar with raised stems sometimes occur in glyph variants that look like extended stems, as seen in the inscription of the One Ring.</p>
-<h2><a id="Tehtar_Vowels_18"></a>Tehtar (Vowels)</h2>
+<h2><a id="Tehtar"></a>Tehtar</h2>
 <p>A tehta (Quenya “marking”) is a diacritic placed above or below the tengwa. They can represent vowels, consonant doubling, or nasal sound.<br>
 As Tolkien explained in the ROTK appendix, the tehtar for vowels resemble Latin diacritics: circumflex (î) /a/, acute (í) /e/, dot (i) /i/, left curl (ı̔ ) /o/, and right curl (ı̓ ) /u/. (Some languages without /o/, such as the Black Speech, use left curl ı̔ for /u/; other languages reverse the signs for /e/ and /i/.) A vowel occurring alone is drawn on the vowel carrier, which resembles dotless i (ı) for a short vowel or dotless j (ȷ) for a long vowel.</p>
-<h2><a id="Modes_21"></a>Modes</h2>
+<h2><a id="Modes"></a>Modes</h2>
 <p>Just as with any alphabetic writing system, every specific language written in tengwar requires a specific orthography, depending on the phonology of that language. These tengwar orthographies are usually called modes. Some modes follow pronunciation, while others follow traditional orthography.<br>
 In some modes, called ómatehtar (or vowel tehtar) modes, the vowels are represented with diacritics called tehtar (Quenya for ‘signs’; corresponding singular: tehta, ‘sign’). These ómatehtar modes can be loosely considered abjads rather than true alphabets. In some ómatehtar modes, the consonant signs feature an inherent vowel. These ómatehtar modes can be considered alphasyllabaries.<br>
 Ómatehtar modes can vary in that the vowel stroke can be placed either on top of the consonant preceding it, as in Quenya (which this transcriber uses), or on the consonant following, as in Sindarin, English, and the notorious Black Speech inscription on the One Ring. The other main difference is in the fourth tyellë below, where those letters with raised stems and doubled bows can be either voiced fricatives, as in Sindarin (general mode at right), or nasalized stops, as in Quenya (classical mode).</p>
@@ -496,16 +562,30 @@ In some modes, called ómatehtar (or vowel tehtar) modes, the vowels are represe
     </section><!--End About Elvish!-->
     <section class="mdl-layout__tab-panel" id="AboutDwarvish"><!--About Dwarvish!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">About Dwarvish</h1>
 			<a href="https://www.wikiwand.com/en/Cirth" target="_blank" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="dwarvishArticle">
 					<i class="material-icons">open_in_new</i>
 				</a>
 				<div class="mdl-tooltip mdl-tooltip--left" for="dwarvishArticle">
 					Open Wikipedia Article
 				</div>
-			<h2><a id="Summary_0"></a>Summary</h2>
+				<p> </p>
+				<a href="#DwarvishSummary" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Summary</span>
+			</a>
+			<a href="#DwarvishOrigin" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Origin</span>
+			</a>
+			<a href="#AngerthasMoria" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Angerthas Moria</span>
+			</a>
+			<a href="#AngerthasErebor" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Angerthas Erebor</span>
+			</a>
+			<h2><a id="DwarvishSummary"></a>Summary</h2>
 <p>The Cirth ([ˈkirθ]; plural of certh [ˈkɛrθ], in Sindarin meaning runes) are a semi-artificial script, with letters shaped on those of actual runic alphabets, invented by J. R. R. Tolkien for the constructed languages he devised and used in his works. Cirth is written with a capital letter when referring to the writing system; the runes themselves can be called cirth.<br>
 In the fictional history of Middle-earth, the original Certhas Daeron was created by the elf Daeron, and was later expanded into what was known as the Angerthas Daeron. Although the Cirth were later largely replaced by the Tengwar, they were adopted by Dwarves to write down their Khuzdul language, Angerthas Moria and Angerthas Erebor (used in this transcriber), because their straight lines were better suited to carving than the curved strokes of the Tengwar. Cirth was also adapted, in its oldest and simplest form, by various peoples including Men and even Orcs.</p>
-<h2><a id="Origin_3"></a>Origin</h2>
+<h2><a id="DwarvishOrigin"></a>Origin</h2>
 <p>During the Chaining of Melkor, the Sindar of Beleriand began developing an alphabet for their language. Its letters were entirely made for carving on wood, stone or metal, hence their angular forms and straight lines. These letters were named cirth (sing. certh). The corresponding Quenya words are certar ([ˈkɛrtɑr]) and certa ([ˈkɛrtɑ]). The assignment of values was unsystematic. The form of a certh consisted of a stem and a branch. The attachment of the branch was, if on one side only, usually made on the right side. The reverse was not infrequent, but had no phonetic significance. Two basic principles were followed:</p>
 <ul>
 <li>adding a stroke to a branch added voice;</li>
@@ -513,10 +593,10 @@ In the fictional history of Middle-earth, the original Certhas Daeron was create
 </ul>
 <p>The elf Daeron, minstrel of king Thingol of Doriath reorganised the cirth and added new ones, being somehow inspired by Fëanor’s Tengwar (therefore this mustn’t have occurred before the return of the Noldor) and made the extension of the cirth known as Certhas Daeron (where “Certhas” means “runic alphabet”), used for inscribing names in Menegroth. The Dwarves working for Thingol liked them and adopted them, making them known also in the East.<br>
 Daeron’s alphabet was originally used by the Grey Elves (Sindar) in Beleriand. Later the Noldor in Eregion adopted the Cirth, added several more runes to the system and created the Angerthas Daeron (where “Angerthas” means “long rune-rows”) sometimes also referred to as Angerthas Eregion. These additional letters were used to represent sounds not found in Sindarin, but present in the tongues of other peoples. The Angerthas Daeron was used primarily for carved inscriptions. For most other forms of written communication the Tengwar were used.</p>
-<h2><a id="Angerthas_Moria_10"></a>Angerthas Moria</h2>
+<h2><a id="AngerthasMoria"></a>Angerthas Moria</h2>
 <p>Dwarves first came to know the runes of the Noldor during the beginning of the Second Age. They modified them to suit the specific needs of their language, Khuzdul. The Dwarves spread their revised alphabet to Moria, where it came to be known as Angerthas Moria. The Dwarves developed both carved and pen-written forms of the runes. Travelling for trading, they spread their alphabet throughout Middle-earth: as a result, variations of Angerthas Moria were employed by other races for their languages.<br>
 These are the runes most often used in <em>The Lord of the Rings</em>.</p>
-<h2><a id="Angerthas_Erebor_13"></a>Angerthas Erebor</h2>
+<h2><a id="AngerthasErebor"></a>Angerthas Erebor</h2>
 <p>According to Tolkien’s legendarium, after the Second Age, the Cirth were obsoleted by the Tengwar among the western races and remained in use only by Dwarves and Men. The Dwarves developed even pen-written cursive forms, since they used them exclusively in any form of writing communication, even in paper. At the beginning of the Third Age, the Dwarves were driven out of Moria. Some migrated to the Grey Mountains, some to the Iron Hills and Thráin I came to Erebor. There he founded his Dwarf-kingdom. There the Angerthas Moria was modified further and some new cirth were added, but some reverted to their Elvish usage, thus creating the Angerthas Erebor variation. This mode was used in Westron by Dwarves and is the mode used in <em>The Hobbit</em> and this transcriber.</p>
 				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
 					<div class="mdl-card__title">
@@ -537,14 +617,27 @@ These are the runes most often used in <em>The Lord of the Rings</em>.</p>
     </section><!--End About Dwarvish!-->
     <section class="mdl-layout__tab-panel" id="Songs"><!--Songs!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Tolkien Songs</h1>
 			<p>Songs and Poems on this page from J.R.R. Tolkien's works are protected by "fair use" under <a href="https://www.law.cornell.edu/uscode/text/17/107" target="_blank">Title 17 § 107</a> of the United States Code.</p>
 			<br>
-			<a href="#Durin">Song of Durin</a><br>
-      <a href="#Mountain">Song of the Lonely Mountain</a><br>
-      <a href="#Elbereth">Song to Elbereth</a><br>
-      <a href="#Road">The Road Goes Ever On</a><br>
-      <a href="#Ent">The Ent and Entwife</a><br>
-      <a href="#Gandalf">Lament for Gandalf</a><br>
+			<a href="#Durin" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Song of Durin</span>
+			</a>
+      <a href="#Mountain" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Song of the Lonely Mountain</span>
+			</a>
+			<a href="#Elbereth" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Song to Elbereth</span>
+			</a>
+			<a href="#Road" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">The Road Goes Ever On</span>
+			</a>
+			<a href="#Ent" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">The Ent and Entwife</span>
+			</a>
+			<a href="#Gandalf" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Lament for Gandalf</span>
+			</a>
       <h2 id="Durin">Song of Durin</h2>
       <p>An excellent arrangement by <a href="https://www.youtube.com/channel/UCC8prZi7q1vnP0A3XX4EWxQ" target="_blank">Clamavi De Profundis</a></p>
       <iframe style="width:560px;height:315px;" width="560px" height="315px" src="https://www.youtube.com/embed/uxfoa23skHg" frameborder="0" allowfullscreen=""></iframe>
@@ -851,21 +944,31 @@ in Khazad-dûm his wisdom died.
     </section><!--End Songs!-->
     <section class="mdl-layout__tab-panel" id="Maps"><!--Maps!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Middle-Earth Maps</h1>
 			<p>Maps on this page from <a href="http://www.isbnsearch.org/isbn/0618002219" target="_blank"><i>The Hobbit</i></a> and <a href="http://www.isbnsearch.org/isbn/0618129014" target="_blank"><i>The Lord of the Rings</i></a> are protected by "fair use" under <a href="https://www.law.cornell.edu/uscode/text/17/107" target="_blank">Title 17 § 107</a> of the United States Code.</p>
+			<a href="#map1" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">The Wilderland</span>
+			</a>
+			<a href="#map2" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Thror's Map</span>
+			</a>
+			<a href="#map3" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Middle-Earth</span>
+			</a>
 	    <h2>The Hobbit</h2>
 	    <h3>The Wilderland</h3>
-	    <a href="http://imgur.com/iMX16Oo.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/iMX16Oo.jpg" alt="The Wilderland" width="100%" height="auto" id="map1"></a>
+	    <a href="http://imgur.com/iMX16Oo.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/iMX16Oo.jpg" alt="The Wilderland" width="100%" height="auto" id="map1" class="mdl-shadow--2dp"></a>
 			<div class="mdl-tooltip" for="map1">
 					The Wilderland Map<br>Click to view in new tab
 				</div>
 	    <h3>Thror's Map</h3>
-	    <a href="http://imgur.com/hvQ2EDx.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/hvQ2EDx.jpg" alt="Thror's Map" width="100%" height="auto" id="map2"></a>
+	    <a href="http://imgur.com/hvQ2EDx.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/hvQ2EDx.jpg" alt="Thror's Map" width="100%" height="auto" id="map2" class="mdl-shadow--2dp"></a>
 			<div class="mdl-tooltip" for="map2">
 					Thror's Map<br>Click to view in new tab
 				</div>
 	    <h2>Lord of the Rings</h2>
 	    <h3>Middle-Earth</h3>
-	    <a href="http://imgur.com/nPOtnBd.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/nPOtnBd.jpg" alt="Middle-Earth" width="100%" height="auto" id="map3"></a>
+	    <a href="http://imgur.com/nPOtnBd.jpg" target="_blank" class="imageLink"><img src="https://imgur.com/nPOtnBd.jpg" alt="Middle-Earth" width="100%" height="auto" id="map3" class="mdl-shadow--2dp"></a>
 			<div class="mdl-tooltip" for="map3">
 					Middle Earth Map<br>Click to view in new tab
 				</div>
@@ -889,31 +992,40 @@ in Khazad-dûm his wisdom died.
     </section><!--End Maps!-->
 		<section class="mdl-layout__tab-panel" id="Fonts"><!--Fonts!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Elvish and Dwarvish Fonts</h1>
 			<a href="dwarvishregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="dwarvishFont">
-					<i class="dwarvishfont">D</i><i class="material-icons">file_download</i>
+					<i class="dwarvishfont" style="position: relative;top: 12px;">D</i>
 				</a>
 				<div class="mdl-tooltip mdl-tooltip--left" for="dwarvishFont">
 					Download Dwarvish font
 				</div>
 				<a href="tengwarfeanorregular.ttf" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab2" id="elvishFont">
-					<i class="elvishfont">D</i><i class="material-icons">file_download</i>
+					<i class="elvishfont" style="position: relative;top: 5px;">D</i>
 				</a>
 				<div class="mdl-tooltip mdl-tooltip--left" for="elvishFont">
 					Download Elvish font
 				</div>
-			<h2>Download <a href="dwarvishregular.ttf">Dwarvish</a> and/or <a href="tengwarfeanorregular.ttf">Elvish</a> TTF fonts</h2>
-			<h3>Installation Instructions:</h3>	   
-        <h4>Windows:</h4>
+			<h2>Installation Instructions:</h2>	   
+			<h3>Download:</h3>
+				<a id="dwarvishFontLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline" href="dwarvishregular.ttf">Dwarvish Font</a>
+				<div class="mdl-tooltip" for="dwarvishFontLink">
+					Download Dwarvish<br>TTF File
+				</div>
+				<a id="elvishFontLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline" href="tengwarfeanorregular.ttf">Elvish Font</a>
+				<div class="mdl-tooltip" for="elvishFontLink">
+					Download Elvish<br>TTF File
+				</div>
+        <h3>Windows:</h3>
         <ol>
           <li>Right-click the downloaded font file</li>
           <li>Select “Install”</li>
         </ol>
-        <h4>Mac OS:</h4>
+        <h3>Mac OS:</h3>
         <ol>
           <li>Double-click the downloaded font file to preview it</li>
           <li>Click Install Font in the preview window to install it</li>
         </ol>
-        <h4>Linux:</h4>
+        <h3>Linux:</h3>
         <p>Note: different Linux distributions come with different desktop environments, and those different desktop environments contain different applications for this.</p>
         <ol>
           <li>Double-click the downloaded font file to preview it</li>
@@ -933,12 +1045,14 @@ in Khazad-dûm his wisdom died.
 					</div>
 					<div class="mdl-card__actions mdl-card--border">
 						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="https://github.com/TengwarTranscriber/TengwarTranscriber.github.io/" target="_blank">View Source</a>
+						<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" onclick="switchToTab('Feedback')">Feedback</a>
 					</div>
 				</div><!--end footer!-->
 			</div>
     </section><!--End Fonts!-->
 		<section class="mdl-layout__tab-panel" id="Apps"><!--Apps!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Tengwar Transcriber Apps</h1>
 			<a href="https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing" target="_blank" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="windowsApp">
 					<i class="material-icons">desktop_windows</i>
 				</a>
@@ -951,9 +1065,15 @@ in Khazad-dûm his wisdom died.
 				<div class="mdl-tooltip mdl-tooltip--left" for="androidApp">
 					Download free Android app
 				</div>
-			<h2>Download the free Tengwar Transcriber Apps for <a href="#WindowsApp">Windows</a> and <a href="#AndroidApp">Android</a></h2>
+			<p> </p>
+			<a href="#WindowsApp" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Windows</span>
+			</a>
+			<a href="#AndroidApp" type="button" class="mdl-chip">
+				<span class="mdl-chip__text">Android</span>
+			</a>
       <h3 id="WindowsApp">Windows App</h3>
-			<a id="windowsLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing" target="_blank">Download</a>
+			<a id="windowsLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing" target="_blank">Download Free</a>
 			<div class="mdl-tooltip" for="windowsLink">
 					Download file hosted<br>on Google Drive
 			</div>
@@ -1009,7 +1129,7 @@ in Khazad-dûm his wisdom died.
       </ol>
       
       <h3 id="AndroidApp">Android App (Beta)</h3>
-			<a id="androidLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="https://drive.google.com/file/d/0B_psIC-BvyqBQWpQRksxSjQxd0U/view?usp=sharing" target="_blank">Download</a>
+			<a id="androidLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" href="https://drive.google.com/file/d/0B_psIC-BvyqBQWpQRksxSjQxd0U/view?usp=sharing" target="_blank">Download Free</a>
 			<div class="mdl-tooltip" for="androidLink">
 					Download file hosted<br>on Google Drive
 			</div>
@@ -1083,6 +1203,7 @@ in Khazad-dûm his wisdom died.
     </section><!--End Apps!-->
 		<section class="mdl-layout__tab-panel" id="Feedback"><!--Feedback!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Feedback</h1>
 			<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;display:none;" id="thankyou"><!--thank you!-->
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text">Thank You!</h2>
