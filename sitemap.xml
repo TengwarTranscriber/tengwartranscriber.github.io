@@ -3,25 +3,25 @@
   xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
   <url>
-    <loc>https://tengwartranscriber.github.io/</loc>
+    <loc>https://tengwartranscriber.github.io/#ElvishTranscriber</loc>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/index.html</loc>
+    <loc>https://tengwartranscriber.github.io/#DwarvishTranscriber</loc>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/dwarvish.html</loc>
+    <loc>https://tengwartranscriber.github.io/#AboutElvish</loc>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/abouttengwar.html</loc>
+    <loc>https://tengwartranscriber.github.io/#AboutDwarvish</loc>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/aboutdwarvish.html</loc>
+    <loc>https://tengwartranscriber.github.io/#Apps</loc>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/welshpronunciation.html</loc>
+    <loc>https://tengwartranscriber.github.io/#Fonts</loc>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/songs.html</loc>
+    <loc>https://tengwartranscriber.github.io/#Songs</loc>
     <video:video>
       <video:content_loc>
         https://r2---sn-n3tcx5h-bwue.googlevideo.com/videoplayback?itag=22&amp;signature=5B06DDFF78263D79FA2FB1F1141958A2C1F7C7EB.9C0A503FC8D794FE0E9E5430447B3FD70935F71A&amp;mime=video%2Fmp4&amp;key=yt6&amp;ei=X-UUWYDLMJDLuAKKxpH4BA&amp;lmt=1492088779626057&amp;source=youtube&amp;upn=uMXR_hT6OiI&amp;initcwndbps=497500&amp;id=o-AKYcHF1XBlKZFC0wS1bQvMhePIuxyk04-PXeYaDReUgR&amp;pl=20&amp;mm=31&amp;mn=sn-n3tcx5h-bwue&amp;ms=au&amp;mt=1494541584&amp;mv=m&amp;sparams=dur%2Cei%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Cratebypass%2Crequiressl%2Csource%2Cupn%2Cexpire&amp;ip=72.42.111.20&amp;requiressl=yes&amp;ratebypass=yes&amp;expire=1494563263&amp;ipbits=0&amp;dur=311.472
@@ -42,7 +42,7 @@
     </video:video>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/maps.html</loc>
+    <loc>https://tengwartranscriber.github.io/#Maps</loc>
     <image:image>
        <image:loc>https://imgur.com/iMX16Oo.jpg</image:loc>
        <image:caption>The Wilderland Map (The Hobbit)</image:caption>
@@ -57,18 +57,6 @@
     </image:image>
   </url>
   <url>
-    <loc>https://tengwartranscriber.github.io/app.html</loc>
-  </url>
-  <url>
-    <loc>https://tengwartranscriber.github.io/more.html?font=elvish</loc>
-  </url>
-  <url>
-    <loc>https://tengwartranscriber.github.io/more.html?font=dwarvish</loc>
-  </url>
-  <url>
-    <loc>https://tengwartranscriber.github.io/sideways.html</loc>
-  </url>
-  <url>
-    <loc>https://tengwartranscriber.github.io/feedback.html</loc>
+    <loc>https://tengwartranscriber.github.io/#Feedback</loc>
   </url>
 </urlset>
