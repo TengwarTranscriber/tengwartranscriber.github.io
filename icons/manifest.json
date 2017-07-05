@@ -1,7 +1,7 @@
 {
-  "name": "Tengwar Feanor Elvish Transcriber",,
+  "name": "Tengwar Feanor Elvish Transcriber",
   "start_url": "index.html/#ElvishTranscriber",
-  "display": "standalone"
+  "display": "standalone",
   "short_name": "Tengwar Feanor",
   "background_color": "#ffffff",
   "theme_color": "#607d8b",
