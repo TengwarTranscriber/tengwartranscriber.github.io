@@ -1,0 +1,43 @@
+{
+  "name": "Tengwar Feanor Elvish Transcriber",
+  "icons": [
+    {
+      "src": "32x32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "density": 0.75
+    },
+    {
+      "src": "60x60.png",
+      "sizes": "60x60",
+      "type": "image/png",
+      "density": 1.0
+    },
+    {
+      "src": "76x76.png",
+      "sizes": "76x76",
+      "type": "image/png",
+      "density": 1.5
+    },
+    {
+      "src": "96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "density": 2.0
+    },
+    {
+      "src": "120x120.png",
+      "sizes": "120x120",
+      "type": "image/png",
+      "density": 3.0
+    },
+    {
+      "src": "152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "density": 4.0
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone"
+}
