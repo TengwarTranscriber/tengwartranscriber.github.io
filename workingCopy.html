@@ -78,6 +78,10 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
 			  src: url('./dwarvishregular.ttf') format('truetype');
 			}
 			
+			body {
+			overflow: hidden;
+			}
+			
 			a{
 				margin-left:.3em;
 				margin-right:.3em;
@@ -182,8 +186,12 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
 			.mdl-layout__tab-bar {
 				height: auto;
 			}
-			.goog-te-gadget-icon {
+			.goog-te-gadget-icon, iframe.goog-te-banner-frame {
 				display:none;
+			}
+			.mdl-layout__container {
+				position:fixed;
+				top:0
 			}
 		</style>
 		<!--Page JS!-->
