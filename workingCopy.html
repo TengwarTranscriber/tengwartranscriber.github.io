@@ -82,11 +82,6 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
 			overflow: hidden;
 			}
 			
-			a{
-				margin-left:.3em;
-				margin-right:.3em;
-			}
-			
 			.demo-card-wide {
 				margin-top: 2rem;
 				margin-bottom: 2rem;
@@ -186,6 +181,11 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
 			.mdl-layout__tab-bar {
 				height: auto;
 			}
+			
+			.mdl-radio {
+				margin-right: 12px;
+			}
+			
 			.goog-te-gadget-icon, iframe.goog-te-banner-frame {
 				display:none;
 			}
@@ -492,14 +492,14 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
 			}
 			
 			function googleTranslateElementInit() {
-				new google.translate.TranslateElement({pageLanguage: 'ro',
+				new google.translate.TranslateElement({pageLanguage: 'en',
 					includedLanguages: 'af,ar,de,en,es,fr,hu,it,ja,no,ro,ru,tr,zh-CN',
 					layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
 					autoDisplay: false}, 'google_translate_element');
 					document.getElementById('google_translate_element').firstChild.firstChild.className = "mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline";
-				document.getElementById('google_translate_element').firstChild.style.right = "5%";
+				document.getElementById('google_translate_element').style.cssText = "float: right;clear: both;margin-left: auto;";/*right = "5%";
 				document.getElementById('google_translate_element').firstChild.style.position = "absolute";
-				document.getElementById('google_translate_element').firstChild.style.top = "14px";
+				document.getElementById('google_translate_element').firstChild.style.top = "14px";*/
 			}
 			function loadGoogleTranslate() {
 				var googleTranslateScript = document.createElement('script');
@@ -509,7 +509,125 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
 				(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild(googleTranslateScript);
 			}
 		</script>
-		
+		<!--Google Structured Data!-->
+			<!--website title!-->
+		<script type="application/ld+json">
+			{
+				"@context": "http://schema.org",
+				"@type": "WebSite",
+				"name": "Tengwar Feanor",
+				"alternateName": "Tengwar Transcriber",
+				"url": "https://tengwartranscriber.github.io/"
+			}
+		</script>
+			<!--Website Breadcrumbs!-->
+		<script type="application/ld+json">
+				{
+					"@context": "http://schema.org",
+					"@type": "BreadcrumbList",
+					"itemListElement": [
+						{
+							"@type": "ListItem",
+							"position": 1,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/",
+								"name": "Tengwar Feanor",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#ElvishTranscriber",
+								"name": "Elvish Transcriber",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#DwarvishTranscriber",
+								"name": "Dwarvish Transcriber",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#AboutElvish",
+								"name": "About Elvish",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#AboutDwarvish",
+								"name": "About Dwarvish",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#Songs",
+								"name": "Songs",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#Maps",
+								"name": "Maps",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#Fonts",
+								"name": "Fonts",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#Apps",
+								"name": "Apps",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#Feedback",
+								"name": "Feedback",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						},
+						{
+							"@type": "ListItem",
+							"position": 2,
+							"item": {
+								"@id": "https://tengwartranscriber.github.io/#AboutSite",
+								"name": "About",
+								"image": "https://tengwartranscriber.github.io/icons/ms.png"
+							}
+						}
+					]
+				}
+		</script>
 	</head>
   <body onload="onLoad()">
   <!-- Simple header with scrollable tabs. -->
@@ -518,7 +636,7 @@ this.actionHandler_&&(this.actionElement_.textContent=this.actionText_,this.acti
     <div class="mdl-layout__header-row">
       <!-- Title -->
       <span class="mdl-layout-title">Tengwar Feanor</span>
-			<button onclick="loadGoogleTranslate(); this.remove()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline" style="right: 5%;position: absolute;">Translate</button>
+			<button onclick="loadGoogleTranslate(); this.remove()" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent inline" style="float: right;clear: both;margin-left: auto;">Translate</button>
 			<div id="google_translate_element"></div>
     </div>
     <!-- Tabs -->
@@ -1229,18 +1347,18 @@ in Khazad-dûm his wisdom died.
 			</a>
 	    <h2>The Hobbit</h2>
 	    <h3>The Wilderland</h3>
-	    <a href="./maps/Wilderland.jpg" target="_blank" class="imageLink"><img src="" data-src="./maps/Wilderland.jpg" alt="The Wilderland. Click to open in new tab." width="100%" height="auto" id="map1" class="mdl-shadow--2dp"></a>
+	    <a href="./maps/Wilderland.jpg" target="_blank" class="imageLink"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCABQAGQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9k=" data-src="./maps/Wilderland.jpg" alt="The Wilderland. Click to open in new tab." width="100%" height="auto" id="map1" class="mdl-shadow--2dp"></a>
 			<div class="mdl-tooltip" for="map1">
 					The Wilderland Map<br>Click to view in new tab
 				</div>
 	    <h3>Thror's Map</h3>
-	    <a href="./maps/Thror's Map.jpg" target="_blank" class="imageLink"><img src="" data-src="./maps/Thror's Map.jpg" alt="Thror's Map. Click to open in new tab." width="100%" height="auto" id="map2" class="mdl-shadow--2dp"></a>
+	    <a href="./maps/Thror's Map.jpg" target="_blank" class="imageLink"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCABMAGQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9k=" data-src="./maps/Thror's Map.jpg" alt="Thror's Map. Click to open in new tab." width="100%" height="auto" id="map2" class="mdl-shadow--2dp"></a>
 			<div class="mdl-tooltip" for="map2">
 					Thror's Map<br>Click to view in new tab
 				</div>
 	    <h2>Lord of the Rings</h2>
 	    <h3>Middle-Earth</h3>
-	    <a href="./maps/MiddleEarth.jpg" target="_blank" class="imageLink"><img src="" data-src="./maps/MiddleEarth.jpg" alt="Middle-Earth. Click to open in new tab." width="100%" height="auto" id="map3" class="mdl-shadow--2dp"></a>
+	    <a href="./maps/MiddleEarth.jpg" target="_blank" class="imageLink"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAIBAQIBAQICAgICAgICAwUDAwMDAwYEBAMFBwYHBwcGBwcICQsJCAgKCAcHCg0KCgsMDAwMBwkODw0MDgsMDAz/2wBDAQICAgMDAwYDAwYMCAcIDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAz/wAARCABIAGQDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD9/KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD/9k=" data-src="./maps/MiddleEarth.jpg" alt="Middle-Earth. Click to open in new tab." width="100%" height="auto" id="map3" class="mdl-shadow--2dp"></a>
 			<div class="mdl-tooltip" for="map3">
 					Middle Earth Map<br>Click to view in new tab
 				</div>
@@ -1323,6 +1441,33 @@ in Khazad-dûm his wisdom died.
     </section><!--End Fonts!-->
 		<section class="mdl-layout__tab-panel" id="Apps"><!--Apps!-->
       <div class="page-content">
+			<!--Generic App Structured Data!-->
+			<script type="application/ld+json">
+		{
+			"@context": "http://schema.org/",
+			"@type": "Product",
+			"name": "Tengwar Feanor Elvish Transcriber",
+			"image": "https://tengwartranscriber.github.io/images/ElvishTranscriberDesktop.png",
+			"logo": "https://tengwartranscriber.github.io/icons/ms.png",
+			"description": "Easy tool for transcribing to Elvish and Dwarvish, maps and songs from Tolkien's works, Elvish and Dwarvish font downloads, history of the languages, and more.",
+			"mpn": "925223",
+			"brand": {
+				"@type": "Thing",
+				"name": "MEDavy"
+			},
+			"aggregateRating": {
+				"@type": "AggregateRating",
+				"ratingValue": "4.5",
+				"reviewCount": "3"
+			},
+			"offers": {
+				"@type": "Offer",
+				"price": "0.00",
+				"priceCurrency": "USD"
+			}
+		}
+</script>
+<!--End Generic App Structured Data!-->
 			<h1 style="color:white;height:1px;margin:0px;padding:0px;">Tengwar Transcriber Apps</h1>
 			<a onclick='window.open("https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing", "_blank", "width=650,height=350,status=no,toolbar-no,menubar=no,");' class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fab" id="windowsApp">
 					<i class="material-icons">desktop_windows</i>
@@ -1344,6 +1489,30 @@ in Khazad-dûm his wisdom died.
 				<span class="mdl-chip__text">Android</span>
 			</a>
       <h3 id="WindowsApp">Windows App</h3>
+			<!--Windows App Structured Data!-->
+			<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tengwar Feanor Elvish Transcriber",
+  "operatingSystem": "Windows",
+  "applicationCategory": "http://schema.org/SoftwareApplication",
+  "screenshot": "https://tengwartranscriber.github.io/images/ElvishTranscriberDesktop.png",
+	"image": "https://tengwartranscriber.github.io/icons/ms.png",
+  "description": "Easy tool for transcribing to Elvish and Dwarvish, maps and songs from Tolkien's works, Elvish and Dwarvish font downloads, history of the languages, and more.",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.5",
+    "ratingCount": "3"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0.00",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<!--End Windows App Structured Data!-->
 			<a id="windowsLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick='window.open("https://drive.google.com/file/d/0B_psIC-BvyqBcC1tUVdzNUNOMk0/view?usp=sharing", "_blank", "width=650,height=350,status=no,toolbar-no,menubar=no,");'>Download Free</a>
 			<div class="mdl-tooltip" for="windowsLink">
 					Download file hosted<br>on Google Drive
@@ -1387,6 +1556,30 @@ in Khazad-dûm his wisdom died.
       </ol>
       
       <h3 id="AndroidApp">Android App (Beta)</h3>
+			<!--Android App Structured Data!-->
+			<script type="application/ld+json">
+{
+  "@context": "http://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Tengwar Feanor Elvish Transcriber",
+  "operatingSystem": "ANDROID",
+  "applicationCategory": "http://schema.org/SoftwareApplication",
+  "screenshot": "https://tengwartranscriber.github.io/images/ElvishTranscriber.png",
+	"image": "https://tengwartranscriber.github.io/icons/ms.png",
+  "description": "Easy tool for transcribing to Elvish and Dwarvish, maps and songs from Tolkien's works, Elvish and Dwarvish font downloads, history of the languages, and more.",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.5",
+    "ratingCount": "3"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0.00",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<!--End Android App Structured Data!-->
 			<a id="androidLink"class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" onclick='window.open("https://drive.google.com/file/d/0B_psIC-BvyqBQWpQRksxSjQxd0U/view?usp=sharing", "_blank", "width=500,height=200,status=no,toolbar-no,menubar=no,");' >Download Free</a>
 			<div class="mdl-tooltip" for="androidLink">
 					Download file hosted<br>on Google Drive
@@ -1600,6 +1793,7 @@ in Khazad-dûm his wisdom died.
     </section><!--End Feedback!-->
 		<section class="mdl-layout__tab-panel" id="AboutSite"><!--About!-->
       <div class="page-content">
+			<h1 style="color:white;height:1px;margin:0px;padding:0px;">About</h1>
 			<br>
 				<a href="#AboutGeneral" type="button" class="mdl-chip">
 					<span class="mdl-chip__text">About Site</span>
@@ -1607,8 +1801,11 @@ in Khazad-dûm his wisdom died.
 				<a href="#AboutNew" type="button" class="mdl-chip">
 					<span class="mdl-chip__text">About New Version</span>
 				</a>
+				<a href="#AboutMe" type="button" class="mdl-chip">
+					<span class="mdl-chip__text">About Me</span>
+				</a>
 				<h2 id="AboutGeneral">About Site</h2>
-				<p>I created this site early 2016 as a way to combine my interests in the works of J. R. R. Tolkien, HTML programming, and font creation. I'm no expert at any of them, however, so I started with the <a href=" http://www.dafont.com/tengwar-annatar.font" target="_blank">Tengwar Annatar</a> font by Johan Winge, which is free for non-commercial use (and commercial use if you give Johan a free copy of the product.)I used <a href="https://birdfont.org" target="_blank">Birdfont</a>, a free font editor by Johan Mattsson, to remap each glyph to the letter(s) it represents in the English Tengwar mode (e.g. '<font class="elvishfont">b</font>' for 'b', '<font class="elvishfont">q</font>' for 'q', '<font class="elvishfont">x</font>' for 'x', etc.) I used the lowercase vowels for the stemless (diacritic only) tehtar, and capital vowels for the stemmed (with vowel carrier) tehtar. I used ligatures to create the tengwar for some common consonant digraphs (e.g. '<font class="elvishfont">sh</font>' for 'sh', '<font class="elvishfont">ng</font>' for 'ng', etc).</p>
+				<p>I created this site early 2016 as a way to combine my interests in the works of J. R. R. Tolkien, HTML programming, and font creation. I started with the <a href=" http://www.dafont.com/tengwar-annatar.font" target="_blank">Tengwar Annatar</a> font by Johan Winge, which is free for non-commercial use (and commercial use if you give Johan a free copy of the product.)I used <a href="https://birdfont.org" target="_blank">Birdfont</a>, a free font editor by Johan Mattsson, to remap each glyph to the letter(s) it represents in the English Tengwar mode (e.g. '<font class="elvishfont">b</font>' for 'b', '<font class="elvishfont">q</font>' for 'q', '<font class="elvishfont">x</font>' for 'x', etc.) I used the lowercase vowels for the stemless (diacritic only) tehtar, and capital vowels for the stemmed (with vowel carrier) tehtar. I used ligatures to create the tengwar for some common consonant digraphs (e.g. '<font class="elvishfont">sh</font>' for 'sh', '<font class="elvishfont">ng</font>' for 'ng', etc).</p>
 				<p>I created a Weebly site, using a pre-built theme and a custom HTML block with two textboxes. The second textbox used my Elvish font; when the user entered text in the first textbox, the text would appear in the second one (with some adjustments for vowel capitalization). I also created a Dwarvish transcriber, using a font I made from the Angerthas Erebor, information on Dwarvish and Elvish, links to download my fonts, and, eventually, a page on how to pronounce Welsh.</p>
 				<p>Eventually Weebly hosting became inadequate for my purposes, lacking flexibility, speed, and customization. In March of 2017 I migrated my site to Github Pages. It started as a clone of the Weebly site, using the <a href="https://github.com/jasonlong/cayman-theme" target="_blank">Cayman theme</a> by Jason Long. I then added two more features; saving the transcription as an image, using <a href="https://html2canvas.hertzen.com/" target="_blank">html2canvas</a>, and saving the transcription as an rtf file, using a Javascript function I wrote. I added a feedback page, using <a href="https://formspree.io" target="_blank">Formspree</a>.  I added a page with maps of Middle-Earth, scanned from my copies of The Hobbit and Lord of the Rings. I also added a page with songs from Tolkien's works, embedding videos from Clamavi de Profundis, a page with instructions on rotating a webpage, and a page with the Chrome T-Rex game. I made the webpage available offline useing the AppCache. I added support for multiple languages, and wrote a Windows app using <a href="https://www.visualstudio.com/" target="_blank">Visual Studio</a></p>
 				<p>Editing the website eventually became a tedious task. Built incrementally over the course of 3 months with no real master plan, the code for the site was a mess; each page referenced three different external stylesheets, three external javascript files, and two external html files, and had both embedded and inline stylesheets and javascript as well. I had to edit the AppCache twice after every modification to get the changes pushed to users. Differing implementations of AppCache led to 'false positive' offline warnings. Pages had a slow load time and the site was tedious to use on small screens. In short, I felt it was time to start over from scratch.</p>
@@ -1629,6 +1826,8 @@ in Khazad-dûm his wisdom died.
 					<li>Images are now hosted with the site</li>
 					<li>More cross-device testing (still limited to devices I own though)</li>
 				</ul>
+				<h2 id="AboutMe">About Me</h2>
+				<p>I am currently a college student  studying Mechanical Engineering and Computer Science. I am an alumnus of FIRST teams FTC 8971 Diamond Blades, FRC 6012 STEAMrollers, and FRC 4293 Komodo, mainly doing programming. In my spare time, I enjoy reading, programming (Visual Basic, C++, Java, HTML, AppInventor, Python) , and sailing. </p>
 				<div class="demo-card-wide mdl-card mdl-shadow--2dp" style="background-color:aliceblue;"><!--footer!-->
 					<div class="mdl-card__title">
 						<h2 class="mdl-card__title-text">Credits</h2>
