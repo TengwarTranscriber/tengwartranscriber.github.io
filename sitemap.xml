@@ -44,19 +44,22 @@
   <url>
     <loc>https://tengwartranscriber.github.io/#Maps</loc>
     <image:image>
-       <image:loc>https://imgur.com/iMX16Oo.jpg</image:loc>
+       <image:loc>https://tengwartranscriberbeta.github.io/maps/Wilderland.jpg</image:loc>
        <image:caption>The Wilderland Map (The Hobbit)</image:caption>
     </image:image>
     <image:image>
-       <image:loc>http://imgur.com/hvQ2EDx.jpg</image:loc>
+       <image:loc>https://tengwartranscriberbeta.github.io/maps/Thror's%20Map.jpg</image:loc>
        <image:caption>Thror's Map (The Hobbit)</image:caption>
     </image:image>
     <image:image>
-       <image:loc>http://imgur.com/nPOtnBd.jpg</image:loc>
+       <image:loc>https://tengwartranscriberbeta.github.io/maps/MiddleEarth.jpg</image:loc>
        <image:caption>Middle-Earth Map (The Lord of the Rings)</image:caption>
     </image:image>
   </url>
   <url>
     <loc>https://tengwartranscriber.github.io/#Feedback</loc>
+  </url>
+  <url>
+    <loc>https://tengwartranscriber.github.io/#AboutSite</loc>
   </url>
 </urlset>
