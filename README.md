@@ -16,7 +16,7 @@ Editing the website eventually became a tedious task. Built incrementally over t
 
 I started by creating a tabbed single-page layout using Material Design Lite. I added custom Javascript to make the site return to the same tab after reload, return to the previous tab when the user clicked the browser's back button, add a history entry for each tab switched to, as if they were separate pages. I used a ServiceWorker for offline use, rather than AppCache. Chrome had, for security reasons, disabled opening data URIs in a new tab, so I had to create a new method for downloading transcriptions. For faster load speed, I created code to defer loading of images and video until the user navigated to the tabs containing them and minified and embedded the Material Design Lite CSS and JS in the HTML file. a complete (more or less) list of features is below, in no particular order.
 
-## Changes in v3:
+### Changes in v3:
 
 Initial load is two seconds slower than old version, but switching pages is instantaneous
 New Android app
