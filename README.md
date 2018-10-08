@@ -33,4 +33,4 @@ More cross-device testing (still limited to devices I own though)
 
 ## About Me
 
-I am currently a college student studying Mechanical Engineering and Computer Science. I am an alumnus of FIRST teams FTC 8971 Diamond Blades, FRC 6012 STEAMrollers, and FRC 4293 Komodo, mainly doing programming. In my spare time, I enjoy reading, programming (Visual Basic, C++, Java, HTML, AppInventor, Python) , and sailing.
+I am Mechanical Engineer and amateur programmer. I program in Visual Basic, C++, Java, Javascript, Ruby, HTML, AppInventor,  and Python.
