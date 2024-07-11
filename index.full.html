@@ -9201,7 +9201,6 @@
         } else if ("DwarvishTranscriber" == e && 1 == storageEnabled && localStorage.text) {
             (DwarvishInput.value = localStorage.text, transcribeDwarvish())
         } else {
-            "Feedback" == e && 1 == getURLParameter("alert") && (document.getElementById("thankyou").style.display = "block");
         }
 
         for (var t = 0, a = (n = document.getElementsByClassName("mdl-layout__tab")).length; t < a; t++) {
@@ -9299,7 +9298,7 @@
                 <div class=mdl-tooltip for=mnu5>Songs and poems from<br>Tolkien's works</div><a href=#Maps class=mdl-layout__tab id=mnu6 onclick='switchToTab("Maps")'>Maps</a>
                 <div class=mdl-tooltip for=mnu6>Middle-Earth maps from<br>Lord of the Rings and the Hobbit</div><a href=#Fonts class=mdl-layout__tab id=mnu7 onclick='switchToTab("Fonts")'>Fonts</a>
                 <div class=mdl-tooltip for=mnu7>Download the Elvish<br>and Dwarvish fonts</div><a href=#Apps class=mdl-layout__tab id=mnu8 onclick='switchToTab("Apps")'>Apps</a>
-                <div class=mdl-tooltip for=mnu8>Get the free Tengwar Feanor<br>apps for Windows and Android</div><a href=#Feedback class=mdl-layout__tab id=mnu9 onclick='switchToTab("Feedback")'>Feedback</a>
+                <div class=mdl-tooltip for=mnu8>Get the free Tengwar Feanor<br>apps for Windows and Android</div>
                 <div class=mdl-tooltip for=mnu9>About this application</div><a id=mnu11 class=mdl-layout__tab style=visibility:hidden>About</a></div>
         </header>
         <main class="mdl-layout__content">
